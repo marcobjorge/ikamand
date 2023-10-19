@@ -1,0 +1,525 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>iKamand</title>
+    <link rel="icon" type="image/png" href="data:image/png;base64,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"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="row row-cols-2 row-cols-sm-3 gx-5">
+        <div class="col order-0 order-sm-0" id="configStatus">
+          <div class="d-flex flex-row justify-content-center">
+            <div class="d-flex d-inline-flex align-items-end p-0"><h1 id="displayStatus" class="display-1" style="display:inline;">-</h1></div>
+          </div>
+          <div class="d-flex flex-row text-nowrap justify-content-center"><p>status</p></div>
+        </div>
+        <div class="col order-1 order-sm-3">
+          <div class="d-flex flex-row justify-content-center">
+            <div class="d-flex d-inline-flex align-items-end p-0"><h1 id="displayFanSpeed" class="display-1" style="display:inline;">-</h1></div>
+            <div class="d-flex d-inline-flex align-items-end p-0"><p>%</p></div>
+          </div>
+          <div class="d-flex flex-row text-nowrap justify-content-center"><p>fan speed</p></div>
+        </div>
+        <div class="col order-3 order-sm-2" data-bs-toggle="modal" data-bs-target="#targetPitTemperatureModal">
+          <div class="d-flex flex-row justify-content-center">
+            <div class="d-flex d-inline-flex align-items-end p-0"><h1 id="displayTargetPitTemperature" class="display-1" style="display:inline;">-</h1></div>
+            <div class="d-flex d-inline-flex align-items-end p-0"><p>ºC</p></div>
+          </div>
+          <div class="d-flex flex-row text-nowrap justify-content-center"><p>target pit temp</p></div>
+        </div>
+        <div class="col order-2 order-sm-1">
+          <div class="d-flex flex-row justify-content-center">
+            <div class="d-flex d-inline-flex align-items-end p-0"><h1 id="displayCurrentPitTemperature" class="display-1" style="display:inline;">-</h1></div>
+            <div class="d-flex d-inline-flex align-items-end p-0"><p>ºC</p></div>
+          </div>
+          <div class="d-flex flex-row text-nowrap justify-content-center"><p>current pit temp</p></div>
+        </div>
+        <div class="col order-5 order-sm-5" data-bs-toggle="modal" data-bs-target="#targetFoodTemperatureModal">
+          <div class="d-flex flex-row justify-content-center">
+            <div class="d-flex d-inline-flex align-items-end p-0"><h1 id="displayTargetFoodTemperature" class="display-1" style="display:inline;">-</h1></div>
+            <div class="d-flex d-inline-flex align-items-end p-0"><p>ºC</p></div>
+          </div>
+          <div class="d-flex flex-row text-nowrap justify-content-center"><p>target food temp</p></div>
+        </div>
+        <div class="col order-4 order-sm-4">
+          <div class="d-flex flex-row justify-content-center">
+            <div class="d-flex d-inline-flex align-items-end p-0"><h1 id="displayCurrentFoodTemperature" class="display-1" style="display:inline;">-</h1></div>
+            <div class="d-flex d-inline-flex align-items-end p-0"><p>ºC</p></div>
+          </div>
+          <div class="d-flex flex-row text-nowrap justify-content-center"><p>current food temp</p></div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <canvas id="pitTemperatureChart"></canvas>
+          <canvas id="foodTemperatureChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+<div class="modal fade" id="targetFoodTemperatureModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Target Food Temperature</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body container">
+        <form>
+          <div class="row">
+            <div class="col-md">
+              <input type="range" min="0" max="400" step="5" class="form-range" id="configTargetFoodTemperatureRange" onInput="$('#configTargetFoodTemperatureVal').html($('#configTargetFoodTemperatureRange').val())">
+            </div>
+            <div class="col-sm-auto">
+              <h1 id="configTargetFoodTemperatureVal">50</h1>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Dismiss</button>
+        <button id="targetFoodTemperatureSave" type="button" class="btn btn-primary">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="targetPitTemperatureModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Target Pit Temperature</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body container">
+        <form>
+          <div class="row">
+            <div class="col-md">
+              <input type="range" min="0" max="400" step="5" class="form-range" id="configTargetPitTemperatureRange" onInput="$('#configTargetPitTemperatureVal').html($('#configTargetPitTemperatureRange').val())">
+            </div>
+            <div class="col-sm-auto">
+              <h1 id="configTargetPitTemperatureVal">50</h1>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Dismiss</button>
+        <button id="targetPitTemperatureSave" type="button" class="btn btn-primary">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="configModal" role="dialog" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Configure</h5>
+      </div>
+      <div class="modal-body container">
+        <form>
+          <div class="row mb-3">
+            <div class="row">
+              <div class="col text-nowrap"><label for="ikamandRefreshPeriodRange" class="form-label">iKamand Refresh Period (sec)</label></div>
+              <div class="col d-flex justify-content-end"><span id="ikamandRefreshPeriodVal">-</span></div>
+            </div>
+            <div class="row">
+              <div class="col"><input type="range" min="5" max="120" step="5" class="form-range" id="ikamandRefreshPeriodRange" onInput="$('#ikamandRefreshPeriodVal').html($('#ikamandRefreshPeriodRange').val())"></div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" id="configSave">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+
+    <script>
+      const chart = (function(){
+        var pitTemperatureChart = undefined;
+        var foodTemperatureChart = undefined;
+
+        const getPitTemperatureData = function(){
+          return {
+            labels: Object.keys(ikamand.data()).map(t => new Date(Number(t)).toLocaleTimeString()),
+            datasets: [{
+              label: 'current pit temperature',
+              backgroundColor: 'rgba(0, 10, 130, .1)',
+              borderColor: 'rgba(0, 10, 130, .7)',
+              data: Object.values(ikamand.data()).map(d => d.currentPitTemperature),
+            },{
+              label: 'target pit temperature',
+              backgroundColor: 'rgba(0, 10, 130, .0)',
+              borderColor: 'rgba(0, 10, 130, .7)',
+              data: Object.values(ikamand.data()).map(d => d.targetPitTemperature),
+            }]
+          }
+        };
+
+        const getFoodTemperatureData = function(){
+          return {
+            labels: Object.keys(ikamand.data()).map(t => new Date(Number(t)).toLocaleTimeString()),
+            datasets: [{
+              label: 'current food temperature',
+              backgroundColor: 'rgba(200, 99, 132, .1)',
+              borderColor: 'rgba(200, 99, 132, .7)',
+              data: Object.values(ikamand.data()).map(d => d.currentFoodTemperature),
+            },{
+              label: 'target food temperature',
+              backgroundColor: 'rgba(200, 99, 132, .0)',
+              borderColor: 'rgba(200, 99, 132, .7)',
+              data: Object.keys(ikamand.data()).map(t => config.getTargetFoodTemperature()),
+            }]
+          }
+        };
+
+        return {
+          refresh: function(){
+            pitTemperatureChart.data = getPitTemperatureData();
+            pitTemperatureChart.update();
+            foodTemperatureChart.data = getFoodTemperatureData();
+            foodTemperatureChart.update();
+          },
+          draw: function(){
+            const pitTemperatureChartElement = document.getElementById("pitTemperatureChart").getContext('2d');
+            pitTemperatureChart = new Chart(pitTemperatureChartElement, {
+              type: 'line',
+              data: getPitTemperatureData(),
+              options: {
+                legend: {
+                  display: false,
+                },
+                scales: {
+                  yAxes: [{
+                    ticks: {
+                      beginAtZero: true,
+                      max: 400
+                    }
+                  }]
+                }
+              },
+            });
+            const foodTemperatureChartElement = document.getElementById("foodTemperatureChart").getContext('2d');
+            foodTemperatureChart = new Chart(foodTemperatureChartElement, {
+              type: 'line',
+              data: getFoodTemperatureData(),
+              options: {
+                legend: {
+                  display: false,
+                },
+                scales: {
+                  yAxes: [{
+                    ticks: {
+                      beginAtZero: true,
+                      max: 400
+                    }
+                  }]
+                }
+              },
+            });
+          }
+        }
+      })();
+    </script>
+    <script type="text/javascript">
+      /**
+      * Utilities to manage the configuration.
+      */
+      const config = (function(){
+        return {
+          setRefreshPeriod: function(period){
+            Cookies.set("ikamand.period", period, { expires: 365*10 });
+          },
+          getRefreshPeriod: function(){
+            var period = Cookies.get("ikamand.period");
+            return period;
+          },
+          getDefaultRefreshPeriod: function(){
+            return 60;
+          },
+          setTargetFoodTemperature: function(targetFoodTemperature){
+            Cookies.set("ikamand.targetFoodTemperature", targetFoodTemperature, { expires: 365 * 10});
+          },
+          getTargetFoodTemperature: function(){
+            var targetFoodTemperature = Cookies.get("ikamand.targetFoodTemperature");
+            return targetFoodTemperature;
+          },
+          getDefaultTargetFoodTemperature: function(){
+            return 60;
+          },
+          setTargetPitTemperature: function(targetPitTemperature){
+            Cookies.set("ikamand.targetPitTemperature", targetPitTemperature, { expires: 365 * 10});
+          },
+          getTargetPitTemperature: function(){
+            var targetPitTemperature = Cookies.get("ikamand.targetPitTemperature");
+            return targetPitTemperature;
+          },
+          getDefaultTargetPitTemperature: function(){
+            return 110;
+          },
+        }
+      })();
+    </script>
+    <script type="text/javascript">
+      /**
+      * Utilities to connect to ikamand.
+      */
+      const ikamand = (function(){
+        var lastData = undefined;
+        var data = {};
+
+        const pushData = function(d){
+          const currentTime = new Date().getTime();
+          data[currentTime] = d;
+        }
+
+        const convertToObject = function (input) {
+          const output = {};
+          input.split('&').forEach((line) => {
+            if (line) {
+              const [key, value] = line.split('=');
+              output[key] = value;
+            }
+          });
+          return output;
+        }
+
+        const decodeData = function (rawText){
+          const input = convertToObject(rawText);
+          const output = {
+            time: input['time'],
+            rm: input['rm'],
+            active: input['acs'],
+            session_id: input['csid'],
+            cm: input['cm'],
+            ag: input['ag'],
+            as: input['as'],
+            currentPitTemperature: input['pt'],
+            probe1Temperature: input['t1'],
+            currentFoodTemperature: input['t1'],
+            probe_2_temp: input['t2'],
+            probe_3_temp: input['t3'],
+            fanSpeed: input['dc'],
+            targetPitTemperature: input['tpt'],
+          };
+          return output;
+        }
+
+        const fetchAndDecodeData = function (url, options){
+          return fetchData(url, options).then(response => {
+             console.log(response);
+             const obj = decodeData(response);
+             return obj;
+          });
+        }
+
+        const fetchData = function(url, options) {
+          return fetch(url, options).then(response => {
+            if (!response.ok) {
+              throw new Error("Request failed");
+            }
+            return response.text();
+          }).then((response) => {
+            return response;
+          }).catch((error) => {
+            console.log(error);
+            return null;
+          });
+        }
+
+        const getFullUrl = function(path) {
+          return `/cgi-bin/${path}`;
+        }
+
+        return {
+          getData: function(){
+            lastData = fetchAndDecodeData(getFullUrl("data"));
+            lastData.then(d => pushData(d));
+            return lastData;
+          },
+          stop: function(){
+            const payload = new URLSearchParams();
+            payload.set('acs', '0');
+            payload.set('ag', '0');
+            payload.set('csid', '');
+            payload.set('sce', '0');
+            payload.set('sge', '0');
+            payload.set('as', '0');
+
+            const headers = {
+             'Content-Type': 'application/x-www-form-urlencoded',
+            };
+
+            return fetchAndDecodeData(getFullUrl("cook"), {
+              method: 'POST',
+              body: payload,
+              headers: headers,
+            })
+          },
+          start: function(targetPitTemperature, targetFoodTemperature){
+            const payload = new URLSearchParams();
+            payload.set('acs', '1');
+            payload.set('csid', "");
+            if( targetPitTemperature != undefined ){
+              payload.set('tpt', targetPitTemperature);
+            }
+            payload.set('p', '1');
+            if( targetFoodTemperature != undefined ){
+              payload.set('tft', targetFoodTemperature);
+            }
+            payload.set('as', '1');
+
+            const headers = {
+              'Content-Type': 'application/x-www-form-urlencoded',
+            };
+
+            return fetchAndDecodeData(getFullUrl("cook"), {
+              method: 'POST',
+              body: payload,
+              headers: headers,
+            });
+          },
+          lastData: function(){
+            return lastData;
+          },
+          data: function(){
+            return data;
+          },
+          startGrill: function(duration){
+            const currentTime = new Date().getTime() / 1000;
+            const payload = new URLSearchParams();
+            payload.set('ag', '1');
+            payload.set('sge', currentTime + duration);
+            payload.set('ct', currentTime);
+
+            const headers = {
+              'Content-Type': 'application/x-www-form-urlencoded',
+            };
+
+            return fetchAndDecodeData(getFullUrl("cook"), {
+              method: 'POST',
+              body: payload,
+              headers: headers,
+            });
+          }
+        };
+      })();
+    </script>
+    <script type="text/javascript">
+      /**
+      * Utilities to manage the information displayed.
+      */
+      const display = (function(){
+
+        const refresh = function(){
+          ikamand.getData().then(d => {
+            $("#displayStatus").html(d.active == 0 ? "off" : "on");
+            $("#displayTargetPitTemperature").html(d.targetPitTemperature);
+            $("#displayCurrentPitTemperature").html(d.currentPitTemperature);
+            $("#displayCurrentFoodTemperature").html(d.currentFoodTemperature);
+            $("#displayFanSpeed").html(d.fanSpeed);
+            $("#configStop").prop("disabled", d.active == 0);
+          });
+        }
+
+        return {
+          refresh,
+          forcedRefresh: function(){
+            for(i=100 ; i<1000 ; i=i+100){
+              setTimeout(refresh, i);
+            }
+          },
+          updateTargetFoodTemperature: function(targetFoodTemperature){
+            if( targetFoodTemperature === undefined ){
+               targetFoodTemperature = config.getTargetFoodTemperature() ?? config.getDefaultTargetFoodTemperature();
+            }
+            $("#displayTargetFoodTemperature").html(targetFoodTemperature);
+            $("#configTargetFoodTemperatureRange").val(targetFoodTemperature);
+            $("#configTargetFoodTemperatureVal").html(targetFoodTemperature);
+          },
+          updateTargetPitTemperature: function(targetPitTemperature){
+            if( targetPitTemperature === undefined ){
+               targetPitTemperature = config.getTargetPitTemperature() ?? config.getDefaultTargetPitTemperature();
+            }
+            $("#configTargetPitTemperatureRange").val(targetPitTemperature);
+            $("#configTargetPitTemperatureVal").html(targetPitTemperature);
+          },
+        }
+      })();
+    </script>
+    <script type="text/javascript">
+      /**
+      * Start the controller.
+      */
+      $(window).load(function(){
+        var ikamandRefreshPeriod = config.getRefreshPeriod();
+        
+        const urlParams = new URLSearchParams(window.location.search);
+        const showConf = urlParams.get('conf');
+
+        if( showConf ){
+          ikamandRefreshPeriod = config.getRefreshPeriod() ?? config.getDefaultRefreshPeriod();
+          $("#ikamandRefreshPeriodRange").val(ikamandRefreshPeriod);
+          $("#ikamandRefreshPeriodVal").html(ikamandRefreshPeriod);
+
+          $("#configSave").click(function(){
+            ikamandRefreshPeriod = $("#ikamandRefreshPeriodRange").val();
+            config.setRefreshPeriod(ikamandRefreshPeriod);
+
+            window.location.href = window.location.pathname;
+          });
+
+          var configModal = new bootstrap.Modal(document.getElementById('configModal'), {keyboard: false, backdrop: 'static'});
+          configModal.show();
+        } else {
+          display.updateTargetFoodTemperature();
+          display.updateTargetPitTemperature();
+
+          $("#targetFoodTemperatureSave").click(function(){
+            targetFoodTemperature = $("#configTargetFoodTemperatureRange").val();
+            config.setTargetFoodTemperature(targetFoodTemperature);
+            display.updateTargetFoodTemperature(targetFoodTemperature);
+            //ikamand.start(undefined, targetFoodTemperature);
+            //display.forcedRefresh();
+            $("#targetFoodTemperatureModal").modal('hide');
+          });
+
+          $("#targetPitTemperatureSave").click(function(){
+            targetPitTemperature = $("#configTargetPitTemperatureRange").val();
+            config.setTargetPitTemperature(targetPitTemperature);
+            ikamand.start(targetPitTemperature, undefined);
+            display.forcedRefresh();
+            $("#targetPitTemperatureModal").modal('hide');
+          });
+
+          $("#configStatus").click(function(){
+            var lastData = ikamand.lastData();
+            if( lastData != undefined ){
+              ikamand.lastData().then(d=>{
+                d.active==0 ? ikamand.start() : ikamand.stop();
+                display.forcedRefresh();
+                $("#targetPitTemperatureModal").modal('hide');
+              });
+            }
+          });
+
+          display.refresh();
+          chart.draw();
+          setInterval(function(){display.refresh(); chart.refresh();}, ikamandRefreshPeriod * 1000);
+        }
+      });
+    </script>
+  </body>
+</html>
+
