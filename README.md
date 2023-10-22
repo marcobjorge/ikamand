@@ -53,8 +53,7 @@ Sure - thank you for your help. Please open a PR and I'll look at it as soon as 
 # Help Wanted
 
 Yes, please:
-* Stop the weird animation on the charts
-* Improvments on styling and responsive behavior
+* Improvements on styling and responsive behavior
 * Dynamically display the probes that are available (instead of just 1)
 * Trim the charts to the last `N` hours (configurable)
 * Store the charts data in permanent storage (survive refresh)
