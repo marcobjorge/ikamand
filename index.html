@@ -368,17 +368,21 @@
             })
           },
           start: function(targetPitTemperature, targetFoodTemperature){
+            var currentTime = Math.round(new Date().getTime()/1000);
+
             const payload = new URLSearchParams();
             payload.set('acs', '1');
             payload.set('csid', "");
             if( targetPitTemperature != undefined ){
               payload.set('tpt', targetPitTemperature);
             }
+            payload.set('sce', currentTime + 4*60);
             payload.set('p', '1');
             if( targetFoodTemperature != undefined ){
               payload.set('tft', targetFoodTemperature);
             }
-            payload.set('as', '1');
+            payload.set('as', '0');
+            payload.set('ct', currentTime);
 
             const headers = {
               'Content-Type': 'application/x-www-form-urlencoded',
@@ -396,23 +400,6 @@
           data: function(){
             return data;
           },
-          startGrill: function(duration){
-            const currentTime = new Date().getTime() / 1000;
-            const payload = new URLSearchParams();
-            payload.set('ag', '1');
-            payload.set('sge', currentTime + duration);
-            payload.set('ct', currentTime);
-
-            const headers = {
-              'Content-Type': 'application/x-www-form-urlencoded',
-            };
-
-            return fetchAndDecodeData(getFullUrl("cook"), {
-              method: 'POST',
-              body: payload,
-              headers: headers,
-            });
-          }
         };
       })();
     </script>
@@ -498,7 +485,7 @@
           $("#targetPitTemperatureSave").click(function(){
             targetPitTemperature = $("#configTargetPitTemperatureRange").val();
             config.setTargetPitTemperature(targetPitTemperature);
-            ikamand.start(targetPitTemperature, undefined);
+            ikamand.start(targetPitTemperature, config.getTargetFoodTemperature());
             display.forcedRefresh();
             $("#targetPitTemperatureModal").modal('hide');
           });
