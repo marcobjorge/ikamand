@@ -496,9 +496,12 @@
             var lastData = ikamand.lastData();
             if( lastData != undefined ){
               ikamand.lastData().then(d=>{
-                d.active==0 ? ikamand.start() : ikamand.stop();
-                display.forcedRefresh();
-                $("#targetPitTemperatureModal").modal('hide');
+                if(d.active == 0 && d.targetPitTemperature == 0 ){
+                  $("#targetPitTemperatureModal").modal("show");
+                } else {
+                  d.active==0 ? ikamand.start() : ikamand.stop();
+                  display.forcedRefresh();
+                }
               });
             }
           });
