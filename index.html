@@ -11,53 +11,67 @@
   </head>
   <body>
     <div class="container">
-      <div class="row row-cols-2 row-cols-sm-3 gx-5">
-        <div class="col order-0 order-sm-0" id="configStatus">
+      <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 gx-5">
+        <div class="col" id="configStatus">
           <div class="d-flex flex-row justify-content-center">
             <div class="d-flex d-inline-flex align-items-end p-0"><h1 id="displayStatus" class="display-1" style="display:inline;">-</h1></div>
           </div>
           <div class="d-flex flex-row text-nowrap justify-content-center"><p>status</p></div>
         </div>
-        <div class="col order-1 order-sm-3">
+        <div class="col">
           <div class="d-flex flex-row justify-content-center">
             <div class="d-flex d-inline-flex align-items-end p-0"><h1 id="displayFanSpeed" class="display-1" style="display:inline;">-</h1></div>
             <div class="d-flex d-inline-flex align-items-end p-0"><p>%</p></div>
           </div>
           <div class="d-flex flex-row text-nowrap justify-content-center"><p>fan speed</p></div>
         </div>
-        <div class="col order-3 order-sm-2" data-bs-toggle="modal" data-bs-target="#targetPitTemperatureModal">
-          <div class="d-flex flex-row justify-content-center">
-            <div class="d-flex d-inline-flex align-items-end p-0"><h1 id="displayTargetPitTemperature" class="display-1" style="display:inline;">-</h1></div>
-            <div class="d-flex d-inline-flex align-items-end p-0"><p>ºC</p></div>
-          </div>
-          <div class="d-flex flex-row text-nowrap justify-content-center"><p>target pit temp</p></div>
-        </div>
-        <div class="col order-2 order-sm-1">
+        <div class="col">
           <div class="d-flex flex-row justify-content-center">
             <div class="d-flex d-inline-flex align-items-end p-0"><h1 id="displayCurrentPitTemperature" class="display-1" style="display:inline;">-</h1></div>
             <div class="d-flex d-inline-flex align-items-end p-0"><p>ºC</p></div>
           </div>
           <div class="d-flex flex-row text-nowrap justify-content-center"><p>current pit temp</p></div>
         </div>
-        <div class="col order-5 order-sm-5" data-bs-toggle="modal" data-bs-target="#targetFoodTemperatureModal">
+        <div class="col" data-bs-toggle="modal" data-bs-target="#targetPitTemperatureModal">
+          <div class="d-flex flex-row justify-content-center">
+            <div class="d-flex d-inline-flex align-items-end p-0"><h1 id="displayTargetPitTemperature" class="display-1" style="display:inline;">-</h1></div>
+            <div class="d-flex d-inline-flex align-items-end p-0"><p>ºC</p></div>
+          </div>
+          <div class="d-flex flex-row text-nowrap justify-content-center"><p>target pit temp</p></div>
+        </div>
+        <div class="col" style="display:none;" id="displayProbe1">
+          <div class="d-flex flex-row justify-content-center">
+            <div class="d-flex d-inline-flex align-items-end p-0"><h1 id="displayProbe1Temperature" class="display-1" style="display:inline;">-</h1></div>
+            <div class="d-flex d-inline-flex align-items-end p-0"><p>ºC</p></div>
+          </div>
+          <div class="d-flex flex-row text-nowrap justify-content-center"><p>probe 1 temp</p></div>
+        </div>
+        <div class="col" style="display:none;" id="displayProbe2">
+          <div class="d-flex flex-row justify-content-center">
+            <div class="d-flex d-inline-flex align-items-end p-0"><h1 id="displayProbe2Temperature" class="display-1" style="display:inline;">-</h1></div>
+            <div class="d-flex d-inline-flex align-items-end p-0"><p>ºC</p></div>
+          </div>
+          <div class="d-flex flex-row text-nowrap justify-content-center"><p>probe 2 temp</p></div>
+        </div>
+        <div class="col" style="display:none;" id="displayProbe3">
+          <div class="d-flex flex-row justify-content-center">
+            <div class="d-flex d-inline-flex align-items-end p-0"><h1 id="displayProbe3Temperature" class="display-1" style="display:inline;">-</h1></div>
+            <div class="d-flex d-inline-flex align-items-end p-0"><p>ºC</p></div>
+          </div>
+          <div class="d-flex flex-row text-nowrap justify-content-center"><p>probe 3 temp</p></div>
+        </div>
+        <div class="col" data-bs-toggle="modal" data-bs-target="#targetFoodTemperatureModal">
           <div class="d-flex flex-row justify-content-center">
             <div class="d-flex d-inline-flex align-items-end p-0"><h1 id="displayTargetFoodTemperature" class="display-1" style="display:inline;">-</h1></div>
             <div class="d-flex d-inline-flex align-items-end p-0"><p>ºC</p></div>
           </div>
           <div class="d-flex flex-row text-nowrap justify-content-center"><p>target food temp</p></div>
         </div>
-        <div class="col order-4 order-sm-4">
-          <div class="d-flex flex-row justify-content-center">
-            <div class="d-flex d-inline-flex align-items-end p-0"><h1 id="displayCurrentFoodTemperature" class="display-1" style="display:inline;">-</h1></div>
-            <div class="d-flex d-inline-flex align-items-end p-0"><p>ºC</p></div>
-          </div>
-          <div class="d-flex flex-row text-nowrap justify-content-center"><p>current food temp</p></div>
-        </div>
       </div>
       <div class="row">
         <div class="col">
           <canvas id="pitTemperatureChart"></canvas>
-          <canvas id="foodTemperatureChart"></canvas>
+          <canvas style="display:none;" id="foodTemperatureChart"></canvas>
         </div>
       </div>
     </div>
@@ -141,7 +155,6 @@
     </div>
   </div>
 </div>
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 
@@ -154,33 +167,59 @@
           return {
             labels: Object.keys(ikamand.data()).map(t => new Date(Number(t)).toLocaleTimeString()),
             datasets: [{
-              label: 'current pit temperature',
-              backgroundColor: 'rgba(0, 10, 130, .1)',
-              borderColor: 'rgba(0, 10, 130, .7)',
-              data: Object.values(ikamand.data()).map(d => d.currentPitTemperature),
+              label: 'current pit temp',
+              backgroundColor: 'rgba(212,199,178, .1)',
+              borderColor: 'rgba(212,199,178, .8)',
+              data: Object.values(ikamand.data()).map(d => d.currentPitTemperature).map(t => t >= 400 || t <= 0 ? undefined: t),
             },{
-              label: 'target pit temperature',
-              backgroundColor: 'rgba(0, 10, 130, .0)',
-              borderColor: 'rgba(0, 10, 130, .7)',
+              label: 'target pit temp',
+              backgroundColor: 'rgba(220,238,180, .0)',
+              borderColor: 'rgba(220,238,180, .8)',
               data: Object.values(ikamand.data()).map(d => d.targetPitTemperature),
             }]
           }
         };
 
         const getFoodTemperatureData = function(){
+          var probe1HasData = Object.values(ikamand.data()).filter(d => d.probe1Temperature != 400).length > 0;
+          var probe2HasData = Object.values(ikamand.data()).filter(d => d.probe2Temperature != 400).length > 0;
+          var probe3HasData = Object.values(ikamand.data()).filter(d => d.probe3Temperature != 400).length > 0;
+
+          var datasets=[];
+          if(probe1HasData){
+            datasets.push({
+              label: 'probe 1 temp',
+              backgroundColor: 'rgba(221,221,221, .1)',
+              borderColor: 'rgba(221,221,221, .8)',
+              data: Object.values(ikamand.data()).map(d => d.probe1Temperature).map(t => t >= 400 || t <= 0 ? undefined: t),
+            });
+          }
+          if(probe2HasData){
+            datasets.push({
+              label: 'probe 1 temp',
+              backgroundColor: 'rgba(255,230,181, .1)',
+              borderColor: 'rgba(255,230,181, .8)',
+              data: Object.values(ikamand.data()).map(d => d.probe2Temperature).map(t => t >= 400 || t <= 0 ? undefined: t),
+            });
+          }
+          if(probe3HasData){
+            datasets.push({
+              label: 'probe 1 temp',
+              backgroundColor: 'rgba(212,255,207, .1)',
+              borderColor: 'rgba(212,255,207, .8)',
+              data: Object.values(ikamand.data()).map(d => d.probe3Temperature).map(t => t >= 400 || t <= 0 ? undefined: t),
+            });
+          }
+          datasets.push({
+            label: 'target food temp',
+            backgroundColor: 'rgba(253,173,158, .0)',
+            borderColor: 'rgba(253,173,158, .8)',
+            data: Object.keys(ikamand.data()).map(t => config.getTargetFoodTemperature()),
+          });
+
           return {
             labels: Object.keys(ikamand.data()).map(t => new Date(Number(t)).toLocaleTimeString()),
-            datasets: [{
-              label: 'current food temperature',
-              backgroundColor: 'rgba(200, 99, 132, .1)',
-              borderColor: 'rgba(200, 99, 132, .7)',
-              data: Object.values(ikamand.data()).map(d => d.currentFoodTemperature),
-            },{
-              label: 'target food temperature',
-              backgroundColor: 'rgba(200, 99, 132, .0)',
-              borderColor: 'rgba(200, 99, 132, .7)',
-              data: Object.keys(ikamand.data()).map(t => config.getTargetFoodTemperature()),
-            }]
+            datasets,
           }
         };
 
@@ -199,7 +238,7 @@
               options: {
                 animation: false,
                 legend: {
-                  display: false,
+                  position: "bottom",
                 },
                 scales: {
                   yAxes: [{
@@ -218,7 +257,7 @@
               options: {
                 animation: false,
                 legend: {
-                  display: false,
+                  position: "bottom",
                 },
                 scales: {
                   yAxes: [{
@@ -309,9 +348,8 @@
             as: input['as'],
             currentPitTemperature: input['pt'],
             probe1Temperature: input['t1'],
-            currentFoodTemperature: input['t1'],
-            probe_2_temp: input['t2'],
-            probe_3_temp: input['t3'],
+            probe2Temperature: input['t2'],
+            probe3Temperature: input['t3'],
             fanSpeed: input['dc'],
             targetPitTemperature: input['tpt'],
           };
@@ -415,10 +453,32 @@
           ikamand.getData().then(d => {
             $("#displayStatus").html(d.active == 0 ? "off" : "on");
             $("#displayTargetPitTemperature").html(d.targetPitTemperature);
-            $("#displayCurrentPitTemperature").html(d.currentPitTemperature);
-            $("#displayCurrentFoodTemperature").html(d.currentFoodTemperature);
+            $("#displayCurrentPitTemperature").html(d.currentPitTemperature == 400 ? "-" : d.currentPitTemperature);
+            $("#displayProbe1Temperature").html(d.probe1Temperature == 400 ? "-" : d.probe1Temperature);
+            $("#displayProbe2Temperature").html(d.probe2Temperature == 400 ? "-" : d.probe2Temperature);
+            $("#displayProbe3Temperature").html(d.probe3Temperature == 400 ? "-" : d.probe3Temperature);
             $("#displayFanSpeed").html(d.fanSpeed);
-            $("#configStop").prop("disabled", d.active == 0);
+
+            var updateProbeVisibility = function(id, temperature){
+              if( temperature == 400 ){
+                $(id).hide();
+                return false;
+              } else {
+                $(id).show();
+                return true;
+              }
+            };
+
+            var anyActiveProbe = false;
+            anyActiveProbe = updateProbeVisibility("#displayProbe1", d.probe1Temperature) || anyActiveProbe;
+            anyActiveProbe = updateProbeVisibility("#displayProbe2", d.probe2Temperature) || anyActiveProbe;
+            anyActiveProbe = updateProbeVisibility("#displayProbe3", d.probe3Temperature) || anyActiveProbe;
+
+            if(anyActiveProbe){
+              $("#foodTemperatureChart").show();
+            } else {
+              $("#foodTemperatureChart").hide();
+            }
           });
         }
 
@@ -479,8 +539,6 @@
             targetFoodTemperature = $("#configTargetFoodTemperatureRange").val();
             config.setTargetFoodTemperature(targetFoodTemperature);
             display.updateTargetFoodTemperature(targetFoodTemperature);
-            //ikamand.start(undefined, targetFoodTemperature);
-            //display.forcedRefresh();
             $("#targetFoodTemperatureModal").modal('hide');
           });
 

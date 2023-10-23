@@ -40,11 +40,11 @@ pm2 logs ikamand
 # Usage
 
 * Access the web app on the server at `http://<serverip>:3000`
-* The chart in blue displays the current/target pit temperature
-* The chart in red displays the current/target food temperature (from probe 1)
+* The first chart displays the current/target pit temperature
+* The second chart displays the current/target food temperature (chart will be hidden if probe data is not available)
 * Click the `status` to turn on/off
-* Click the `target pit temperature` to adjust it
-* Click the `target food temperature` to adjust it
+* Click the `target pit temp` to adjust it
+* Click the `target food temp` to adjust it
 
 # Contributing
 
@@ -54,7 +54,6 @@ Sure - thank you for your help. Please open a PR and I'll look at it as soon as 
 
 Yes, please:
 * Improvements on styling and responsive behavior
-* Dynamically display the probes that are available (instead of just 1)
 * Trim the charts to the last `N` hours (configurable)
 * Store the charts data in permanent storage (survive refresh)
 * Support for the grill mode (fan at `100%` for some amount of time)
