@@ -13,6 +13,10 @@ program.parse();
 
 console.log(`Starting server on port '${program.opts().port}' and forwarding to '${program.opts().ikamand}'`);
 
+proxy.on('error', function(err){
+  console.error(err);
+});
+
 http.createServer(function(req, res) {
   if(req.url.startsWith("/cgi-bin")){
     proxy.web(req, res, { target: `http://${program.opts().ikamand}`});
