@@ -30,42 +30,42 @@
         <div class="col">
           <div class="d-flex flex-row justify-content-center">
             <div class="d-flex d-inline-flex align-items-end p-0"><h1 id="displayCurrentPitTemperature" class="display-1" style="display:inline;">-</h1></div>
-            <div class="d-flex d-inline-flex align-items-end p-0"><p>ºC</p></div>
+            <div class="d-flex d-inline-flex align-items-end p-0"><p class="display-temperature-unit"></p></div>
           </div>
           <div class="d-flex flex-row text-nowrap justify-content-center"><p>current pit temp</p></div>
         </div>
         <div class="col" data-bs-toggle="modal" data-bs-target="#targetPitTemperatureModal">
           <div class="d-flex flex-row justify-content-center">
             <div class="d-flex d-inline-flex align-items-end p-0"><h1 id="displayTargetPitTemperature" class="display-1" style="display:inline;">-</h1></div>
-            <div class="d-flex d-inline-flex align-items-end p-0"><p>ºC</p></div>
+            <div class="d-flex d-inline-flex align-items-end p-0"><p class="display-temperature-unit"></p></div>
           </div>
           <div class="d-flex flex-row text-nowrap justify-content-center"><p>target pit temp</p></div>
         </div>
         <div class="col" style="display:none;" id="displayProbe1">
           <div class="d-flex flex-row justify-content-center">
             <div class="d-flex d-inline-flex align-items-end p-0"><h1 id="displayProbe1Temperature" class="display-1" style="display:inline;">-</h1></div>
-            <div class="d-flex d-inline-flex align-items-end p-0"><p>ºC</p></div>
+            <div class="d-flex d-inline-flex align-items-end p-0"><p class="display-temperature-unit"></p></div>
           </div>
           <div class="d-flex flex-row text-nowrap justify-content-center"><p>probe 1 temp</p></div>
         </div>
         <div class="col" style="display:none;" id="displayProbe2">
           <div class="d-flex flex-row justify-content-center">
             <div class="d-flex d-inline-flex align-items-end p-0"><h1 id="displayProbe2Temperature" class="display-1" style="display:inline;">-</h1></div>
-            <div class="d-flex d-inline-flex align-items-end p-0"><p>ºC</p></div>
+            <div class="d-flex d-inline-flex align-items-end p-0"><p class="display-temperature-unit"></p></div>
           </div>
           <div class="d-flex flex-row text-nowrap justify-content-center"><p>probe 2 temp</p></div>
         </div>
         <div class="col" style="display:none;" id="displayProbe3">
           <div class="d-flex flex-row justify-content-center">
             <div class="d-flex d-inline-flex align-items-end p-0"><h1 id="displayProbe3Temperature" class="display-1" style="display:inline;">-</h1></div>
-            <div class="d-flex d-inline-flex align-items-end p-0"><p>ºC</p></div>
+            <div class="d-flex d-inline-flex align-items-end p-0"><p class="display-temperature-unit"></p></div>
           </div>
           <div class="d-flex flex-row text-nowrap justify-content-center"><p>probe 3 temp</p></div>
         </div>
-        <div class="col" data-bs-toggle="modal" data-bs-target="#targetFoodTemperatureModal">
+        <div class="col" style="display:none;" data-bs-toggle="modal" data-bs-target="#targetFoodTemperatureModal" id="displayTargetFoodTemperature">
           <div class="d-flex flex-row justify-content-center">
             <div class="d-flex d-inline-flex align-items-end p-0"><h1 id="displayTargetFoodTemperature" class="display-1" style="display:inline;">-</h1></div>
-            <div class="d-flex d-inline-flex align-items-end p-0"><p>ºC</p></div>
+            <div class="d-flex d-inline-flex align-items-end p-0"><p class="display-temperature-unit"></p></div>
           </div>
           <div class="d-flex flex-row text-nowrap justify-content-center"><p>target food temp</p></div>
         </div>
@@ -79,7 +79,7 @@
     </div>
 
 <div class="modal fade" id="targetFoodTemperatureModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-sm">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">Target Food Temperature</h5>
@@ -88,11 +88,11 @@
       <div class="modal-body container">
         <form>
           <div class="row">
-            <div class="col-md">
+            <div class="col-lg">
               <input type="range" min="0" max="400" step="5" class="form-range" id="configTargetFoodTemperatureRange" onInput="$('#configTargetFoodTemperatureVal').html($('#configTargetFoodTemperatureRange').val())">
             </div>
             <div class="col-sm-auto">
-              <h1 id="configTargetFoodTemperatureVal">50</h1>
+              <h1 id="configTargetFoodTemperatureVal"></h1>
             </div>
           </div>
         </form>
@@ -106,7 +106,7 @@
 </div>
 
 <div class="modal fade" id="targetPitTemperatureModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-sm">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">Target Pit Temperature</h5>
@@ -119,7 +119,7 @@
               <input type="range" min="0" max="400" step="5" class="form-range" id="configTargetPitTemperatureRange" onInput="$('#configTargetPitTemperatureVal').html($('#configTargetPitTemperatureRange').val())">
             </div>
             <div class="col-sm-auto">
-              <h1 id="configTargetPitTemperatureVal">50</h1>
+              <h1 id="configTargetPitTemperatureVal"></h1>
             </div>
           </div>
         </form>
@@ -142,11 +142,28 @@
         <form>
           <div class="row mb-3">
             <div class="row">
-              <div class="col text-nowrap"><label for="ikamandRefreshPeriodRange" class="form-label">iKamand Refresh Period (sec)</label></div>
+              <div class="col text-nowrap"><label for="ikamandRefreshPeriodRange" class="form-label">Refresh Period (sec)</label></div>
               <div class="col d-flex justify-content-end"><span id="ikamandRefreshPeriodVal">-</span></div>
             </div>
             <div class="row">
               <div class="col"><input type="range" min="5" max="120" step="5" class="form-range" id="ikamandRefreshPeriodRange" onInput="$('#ikamandRefreshPeriodVal').html($('#ikamandRefreshPeriodRange').val())"></div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md">
+              <div class="col text-nowrap"><label class="form-label">Temperature Unit</label></div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="flexRadioDefault" id="configTemperatureUnitCelsius">
+                  <label class="form-check-label" for="configTemperatureUnitCelsius">
+                    Celsius
+                  </label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="flexRadioDefault" id="configTemperatureUnitFahrenheit">
+                  <label class="form-check-label" for="configTemperatureUnitFahrenheit">
+                    Fahrenheit
+                  </label>
+              </div>
             </div>
           </div>
         </form>
@@ -172,12 +189,12 @@
               label: 'current pit temp',
               backgroundColor: 'rgba(212,199,178, .1)',
               borderColor: 'rgba(212,199,178, .8)',
-              data: Object.values(ikamand.data()).map(d => d.currentPitTemperature).map(t => t >= 400 || t <= 0 ? undefined: t),
+              data: Object.values(ikamand.data()).map(d => d.currentPitTemperature).map(t => t >= 400 || t <= 0 ? undefined: display.convertToTemperatureUnit(t)),
             },{
               label: 'target pit temp',
               backgroundColor: 'rgba(220,238,180, .0)',
               borderColor: 'rgba(220,238,180, .8)',
-              data: Object.values(ikamand.data()).map(d => d.targetPitTemperature),
+              data: Object.values(ikamand.data()).map(d => display.convertToTemperatureUnit(d.targetPitTemperature)),
             }]
           }
         };
@@ -193,7 +210,7 @@
               label: 'probe 1 temp',
               backgroundColor: 'rgba(221,221,221, .1)',
               borderColor: 'rgba(221,221,221, .8)',
-              data: Object.values(ikamand.data()).map(d => d.probe1Temperature).map(t => t >= 400 || t <= 0 ? undefined: t),
+              data: Object.values(ikamand.data()).map(d => d.probe1Temperature).map(t => t >= 400 || t <= 0 ? undefined: display.convertToTemperatureUnit(t)),
             });
           }
           if(probe2HasData){
@@ -201,7 +218,7 @@
               label: 'probe 1 temp',
               backgroundColor: 'rgba(255,230,181, .1)',
               borderColor: 'rgba(255,230,181, .8)',
-              data: Object.values(ikamand.data()).map(d => d.probe2Temperature).map(t => t >= 400 || t <= 0 ? undefined: t),
+              data: Object.values(ikamand.data()).map(d => d.probe2Temperature).map(t => t >= 400 || t <= 0 ? undefined: display.convertToTemperatureUnit(t)),
             });
           }
           if(probe3HasData){
@@ -209,14 +226,14 @@
               label: 'probe 1 temp',
               backgroundColor: 'rgba(212,255,207, .1)',
               borderColor: 'rgba(212,255,207, .8)',
-              data: Object.values(ikamand.data()).map(d => d.probe3Temperature).map(t => t >= 400 || t <= 0 ? undefined: t),
+              data: Object.values(ikamand.data()).map(d => d.probe3Temperature).map(t => t >= 400 || t <= 0 ? undefined: display.convertToTemperatureUnit(t)),
             });
           }
           datasets.push({
             label: 'target food temp',
             backgroundColor: 'rgba(253,173,158, .0)',
             borderColor: 'rgba(253,173,158, .8)',
-            data: Object.keys(ikamand.data()).map(t => config.getTargetFoodTemperature()),
+            data: Object.keys(ikamand.data()).map(t => display.convertToTemperatureUnit(config.getTargetFoodTemperature())),
           });
 
           return {
@@ -246,7 +263,7 @@
                   yAxes: [{
                     ticks: {
                       beginAtZero: true,
-                      max: 400
+                      max: display.convertToTemperatureUnit(400),
                     }
                   }]
                 }
@@ -265,7 +282,7 @@
                   yAxes: [{
                     ticks: {
                       beginAtZero: true,
-                      max: 400
+                      max: display.convertToTemperatureUnit(400),
                     }
                   }]
                 }
@@ -280,6 +297,11 @@
       * Utilities to manage the configuration.
       */
       const config = (function(){
+        var temperatureUnit = {
+            celsius: 1,
+            fahrenheit: 2,
+        };
+
         return {
           setRefreshPeriod: function(period){
             Cookies.set("ikamand.period", period, { expires: 365*10 });
@@ -289,7 +311,7 @@
             return period;
           },
           getDefaultRefreshPeriod: function(){
-            return 60;
+            return 5;
           },
           setTargetFoodTemperature: function(targetFoodTemperature){
             Cookies.set("ikamand.targetFoodTemperature", targetFoodTemperature, { expires: 365 * 10});
@@ -310,6 +332,17 @@
           },
           getDefaultTargetPitTemperature: function(){
             return 110;
+          },
+          temperatureUnit,
+          setTemperatureUnit: function(temperatureUnit){
+            Cookies.set("ikamand.temperatureUnit", temperatureUnit, { expires: 365 * 10});
+          },
+          getTemperatureUnit: function(){
+            var temperatureUnit = Cookies.get("ikamand.temperatureUnit");
+            return temperatureUnit;
+          },
+          getDefaultTemperatureUnit: function(){
+            return temperatureUnit.celsius;
           },
         }
       })();
@@ -454,11 +487,11 @@
         const refresh = function(){
           ikamand.getData().then(d => {
             $("#displayStatus").html(d.active == 0 ? "off" : "on");
-            $("#displayTargetPitTemperature").html(d.targetPitTemperature);
-            $("#displayCurrentPitTemperature").html(d.currentPitTemperature == 400 ? "-" : d.currentPitTemperature);
-            $("#displayProbe1Temperature").html(d.probe1Temperature == 400 ? "-" : d.probe1Temperature);
-            $("#displayProbe2Temperature").html(d.probe2Temperature == 400 ? "-" : d.probe2Temperature);
-            $("#displayProbe3Temperature").html(d.probe3Temperature == 400 ? "-" : d.probe3Temperature);
+            $("#displayTargetPitTemperature").html(convertToTemperatureUnit(d.targetPitTemperature));
+            $("#displayCurrentPitTemperature").html(d.currentPitTemperature == 400 ? "-" : convertToTemperatureUnit(d.currentPitTemperature));
+            $("#displayProbe1Temperature").html(d.probe1Temperature == 400 ? "-" : convertToTemperatureUnit(d.probe1Temperature));
+            $("#displayProbe2Temperature").html(d.probe2Temperature == 400 ? "-" : convertToTemperatureUnit(d.probe2Temperature));
+            $("#displayProbe3Temperature").html(d.probe3Temperature == 400 ? "-" : convertToTemperatureUnit(d.probe3Temperature));
             $("#displayFanSpeed").html(d.fanSpeed);
 
             var updateProbeVisibility = function(id, temperature){
@@ -477,11 +510,24 @@
             anyActiveProbe = updateProbeVisibility("#displayProbe3", d.probe3Temperature) || anyActiveProbe;
 
             if(anyActiveProbe){
+              $('#displayTargetFoodTemperature').show();
               $("#foodTemperatureChart").show();
             } else {
+              $('#displayTargetFoodTemperature').hide();
               $("#foodTemperatureChart").hide();
             }
           });
+        };
+
+        var convertToTemperatureUnit = function(temperature){
+          var temperatureUnit = config.getTemperatureUnit() ?? config.getDefaultTemperatureUnit();
+          if( temperatureUnit == config.temperatureUnit.celsius ){
+            return temperature;
+          } else if( temperatureUnit == config.temperatureUnit.fahrenheit){
+            return Math.round(temperature * 1.8 + 32);
+          } else {
+            throw Exception(`Unsupported temperature '${temperatureUnit}'`);
+          }
         }
 
         return {
@@ -492,19 +538,43 @@
             }
           },
           updateTargetFoodTemperature: function(targetFoodTemperature){
-            if( targetFoodTemperature === undefined ){
+            if( targetFoodTemperature == undefined ){
                targetFoodTemperature = config.getTargetFoodTemperature() ?? config.getDefaultTargetFoodTemperature();
             }
-            $("#displayTargetFoodTemperature").html(targetFoodTemperature);
-            $("#configTargetFoodTemperatureRange").val(targetFoodTemperature);
-            $("#configTargetFoodTemperatureVal").html(targetFoodTemperature);
+            $("#displayTargetFoodTemperature").html(convertToTemperatureUnit(targetFoodTemperature));
+            $("#configTargetFoodTemperatureRange").val(convertToTemperatureUnit(targetFoodTemperature));
+            $("#configTargetFoodTemperatureRange").prop('min', 0);
+            $("#configTargetFoodTemperatureRange").prop('max', convertToTemperatureUnit(380));
+            $("#configTargetFoodTemperatureVal").html(convertToTemperatureUnit(targetFoodTemperature));
+
           },
           updateTargetPitTemperature: function(targetPitTemperature){
-            if( targetPitTemperature === undefined ){
+            if( targetPitTemperature == undefined ){
                targetPitTemperature = config.getTargetPitTemperature() ?? config.getDefaultTargetPitTemperature();
             }
-            $("#configTargetPitTemperatureRange").val(targetPitTemperature);
-            $("#configTargetPitTemperatureVal").html(targetPitTemperature);
+            $("#configTargetPitTemperatureRange").val(convertToTemperatureUnit(targetPitTemperature));
+            $("#configTargetPitTemperatureRange").prop('min', 0);
+            $("#configTargetPitTemperatureRange").prop('max', convertToTemperatureUnit(380));
+            $("#configTargetPitTemperatureVal").html(convertToTemperatureUnit(targetPitTemperature));
+          },
+          updateTemperatureUnit: function(temperatureUnit){
+            if( temperatureUnit == undefined ){
+               temperatureUnit = config.getTemperatureUnit() ?? config.getDefaultTemperatureUnit();
+            }
+            $("#configTemperatureUnitCelsius").prop('checked', temperatureUnit == config.temperatureUnit.celsius);
+            $("#configTemperatureUnitFahrenheit").prop('checked', temperatureUnit == config.temperatureUnit.fahrenheit);
+            $(".display-temperature-unit").html( temperatureUnit == config.temperatureUnit.celsius ? "ºC" : (temperatureUnit == config.temperatureUnit.fahrenheit ? "º F": "") );
+          },
+          convertToTemperatureUnit,
+          convertFromTemperatureUnit: function(temperature){
+            var temperatureUnit = config.getTemperatureUnit() ?? config.getDefaultTemperatureUnit();
+            if( temperatureUnit == config.temperatureUnit.celsius ){
+              return temperature;
+            } else if( temperatureUnit == config.temperatureUnit.fahrenheit){
+              return Math.round((temperature - 32) / 1.8);
+            } else {
+              throw Exception(`Unsupported temperature '${temperatureUnit}'`);
+            }
           },
         }
       })();
@@ -514,6 +584,10 @@
       * Start the controller.
       */
       $(window).load(function(){
+        display.updateTargetFoodTemperature();
+        display.updateTargetPitTemperature();
+        display.updateTemperatureUnit();
+
         var ikamandRefreshPeriod = config.getRefreshPeriod();
         
         const urlParams = new URLSearchParams(window.location.search);
@@ -525,8 +599,10 @@
           $("#ikamandRefreshPeriodVal").html(ikamandRefreshPeriod);
 
           $("#configSave").click(function(){
-            ikamandRefreshPeriod = $("#ikamandRefreshPeriodRange").val();
-            config.setRefreshPeriod(ikamandRefreshPeriod);
+            config.setRefreshPeriod($("#ikamandRefreshPeriodRange").val());
+console.log($("#configTemperatureUnitCelsius").is(":checked"));
+            config.setTemperatureUnit($("#configTemperatureUnitCelsius").is(":checked") ? config.temperatureUnit.celsius : ( 
+$("#configTemperatureUnitFahrenheit").is(":checked") ? config.temperatureUnit.fahrenheit : config.temperatureUnit.celsius  ));
 
             window.location.href = window.location.pathname;
           });
@@ -534,18 +610,15 @@
           var configModal = new bootstrap.Modal(document.getElementById('configModal'), {keyboard: false, backdrop: 'static'});
           configModal.show();
         } else {
-          display.updateTargetFoodTemperature();
-          display.updateTargetPitTemperature();
-
           $("#targetFoodTemperatureSave").click(function(){
-            targetFoodTemperature = $("#configTargetFoodTemperatureRange").val();
+            targetFoodTemperature = display.convertFromTemperatureUnit($("#configTargetFoodTemperatureRange").val());
             config.setTargetFoodTemperature(targetFoodTemperature);
             display.updateTargetFoodTemperature(targetFoodTemperature);
             $("#targetFoodTemperatureModal").modal('hide');
           });
 
           $("#targetPitTemperatureSave").click(function(){
-            targetPitTemperature = $("#configTargetPitTemperatureRange").val();
+            targetPitTemperature = display.convertFromTemperatureUnit($("#configTargetPitTemperatureRange").val());
             config.setTargetPitTemperature(targetPitTemperature);
             ikamand.start(targetPitTemperature, config.getTargetFoodTemperature());
             display.forcedRefresh();
@@ -566,6 +639,7 @@
             }
           });
 
+          window.scrollTo(0,1);
           display.refresh();
           chart.draw();
           setInterval(function(){display.refresh(); chart.refresh();}, ikamandRefreshPeriod * 1000);
