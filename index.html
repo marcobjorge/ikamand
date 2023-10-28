@@ -447,15 +447,11 @@
 
             const payload = new URLSearchParams();
             payload.set('acs', '1');
-            payload.set('csid', "");
-            if( targetPitTemperature != undefined ){
-              payload.set('tpt', targetPitTemperature);
-            }
+            payload.set('csid', crypto.randomUUID());
+            payload.set('tpt', targetPitTemperature);
             payload.set('sce', currentTime + 4*60);
             payload.set('p', '1');
-            if( targetFoodTemperature != undefined ){
-              payload.set('tft', targetFoodTemperature);
-            }
+            payload.set('tft', targetFoodTemperature);
             payload.set('as', '0');
             payload.set('ct', currentTime);
 
@@ -632,7 +628,7 @@ $("#configTemperatureUnitFahrenheit").is(":checked") ? config.temperatureUnit.fa
                 if(d.active == 0 && d.targetPitTemperature == 0 ){
                   $("#targetPitTemperatureModal").modal("show");
                 } else {
-                  d.active==0 ? ikamand.start() : ikamand.stop();
+                  d.active==0 ? ikamand.start(d.targetPitTemperature, config.getTargetFoodTemperature()) : ikamand.stop();
                   display.forcedRefresh();
                 }
               });
