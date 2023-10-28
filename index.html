@@ -474,7 +474,8 @@
             payload.set('acs', '1');
             payload.set('csid', crypto.randomUUID());
             payload.set('tpt', targetPitTemperature);
-            payload.set('sce', currentTime + 4*60);
+            // activate for 6h, manually disable if needed
+            payload.set('sce', currentTime + 6*60*60);
             payload.set('p', '1');
             payload.set('tft', targetFoodTemperature);
             payload.set('as', '0');
