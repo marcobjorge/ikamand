@@ -12,6 +12,16 @@
     <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
   </head>
   <body>
+    <nav class="navbar bg-body-tertiary">
+      <div class="container">
+        <a class="navbar-brand" href="#">
+          <img src="data:image/png;base64,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" alt="iKamand" width="30" height="24">
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="modal" data-bs-target="#configModal" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Configure">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+      </div>
+    </nav>
     <div class="container">
       <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 gx-5">
         <div class="col" id="configStatus">
@@ -142,11 +152,11 @@
         <form>
           <div class="row mb-3">
             <div class="row">
-              <div class="col text-nowrap"><label for="ikamandRefreshPeriodRange" class="form-label">Refresh Period (sec)</label></div>
-              <div class="col d-flex justify-content-end"><span id="ikamandRefreshPeriodVal">-</span></div>
+              <div class="col text-nowrap"><label for="refreshPeriodRange" class="form-label">Refresh Period (seconds)</label></div>
+              <div class="col d-flex justify-content-end"><span id="refreshPeriodVal">-</span></div>
             </div>
             <div class="row">
-              <div class="col"><input type="range" min="5" max="120" step="5" class="form-range" id="ikamandRefreshPeriodRange" onInput="$('#ikamandRefreshPeriodVal').html($('#ikamandRefreshPeriodRange').val())"></div>
+              <div class="col"><input type="range" min="5" max="120" step="5" class="form-range" id="refreshPeriodRange" onInput="$('#refreshPeriodVal').html($('#refreshPeriodRange').val())"></div>
             </div>
           </div>
           <div class="row">
@@ -245,8 +255,11 @@
         return {
           refresh: function(){
             pitTemperatureChart.data = getPitTemperatureData();
+            pitTemperatureChart.options.scales.yAxes[0].ticks.max = display.convertToTemperatureUnit(400);
             pitTemperatureChart.update();
+
             foodTemperatureChart.data = getFoodTemperatureData();
+            foodTemperatureChart.options.scales.yAxes[0].ticks.max = display.convertToTemperatureUnit(400);
             foodTemperatureChart.update();
           },
           draw: function(){
@@ -304,6 +317,9 @@
 
         return {
           setRefreshPeriod: function(period){
+            if( period == undefined ){
+              return;
+            }
             Cookies.set("ikamand.period", period, { expires: 365*10 });
           },
           getRefreshPeriod: function(){
@@ -314,6 +330,9 @@
             return 5;
           },
           setTargetFoodTemperature: function(targetFoodTemperature){
+            if( targetFoodTemperature == undefined ){
+              return;
+            }
             Cookies.set("ikamand.targetFoodTemperature", targetFoodTemperature, { expires: 365 * 10});
           },
           getTargetFoodTemperature: function(){
@@ -324,6 +343,9 @@
             return 60;
           },
           setTargetPitTemperature: function(targetPitTemperature){
+            if( targetPitTemperature == undefined ){
+              return;
+            }
             Cookies.set("ikamand.targetPitTemperature", targetPitTemperature, { expires: 365 * 10});
           },
           getTargetPitTemperature: function(){
@@ -335,6 +357,9 @@
           },
           temperatureUnit,
           setTemperatureUnit: function(temperatureUnit){
+            if( temperatureUnit == undefined ){
+              return;
+            }
             Cookies.set("ikamand.temperatureUnit", temperatureUnit, { expires: 365 * 10});
           },
           getTemperatureUnit: function(){
@@ -572,6 +597,13 @@
               throw Exception(`Unsupported temperature '${temperatureUnit}'`);
             }
           },
+          updateRefreshPeriod: function(refreshPeriod){
+            if( refreshPeriod == undefined ){
+              refreshPeriod = config.getRefreshPeriod() ?? config.getDefaultRefreshPeriod();
+            }
+            $("#refreshPeriodRange").val(refreshPeriod);
+            $("#refreshPeriodVal").html(refreshPeriod);
+          },
         }
       })();
     </script>
@@ -583,63 +615,50 @@
         display.updateTargetFoodTemperature();
         display.updateTargetPitTemperature();
         display.updateTemperatureUnit();
+        display.updateRefreshPeriod();
+        display.updateTemperatureUnit();
 
-        var ikamandRefreshPeriod = config.getRefreshPeriod();
-        
-        const urlParams = new URLSearchParams(window.location.search);
-        const showConf = urlParams.get('conf');
-
-        if( showConf ){
-          ikamandRefreshPeriod = config.getRefreshPeriod() ?? config.getDefaultRefreshPeriod();
-          $("#ikamandRefreshPeriodRange").val(ikamandRefreshPeriod);
-          $("#ikamandRefreshPeriodVal").html(ikamandRefreshPeriod);
-
-          $("#configSave").click(function(){
-            config.setRefreshPeriod($("#ikamandRefreshPeriodRange").val());
-console.log($("#configTemperatureUnitCelsius").is(":checked"));
-            config.setTemperatureUnit($("#configTemperatureUnitCelsius").is(":checked") ? config.temperatureUnit.celsius : ( 
-$("#configTemperatureUnitFahrenheit").is(":checked") ? config.temperatureUnit.fahrenheit : config.temperatureUnit.celsius  ));
-
-            window.location.href = window.location.pathname;
-          });
-
-          var configModal = new bootstrap.Modal(document.getElementById('configModal'), {keyboard: false, backdrop: 'static'});
-          configModal.show();
-        } else {
-          $("#targetFoodTemperatureSave").click(function(){
-            targetFoodTemperature = display.convertFromTemperatureUnit($("#configTargetFoodTemperatureRange").val());
-            config.setTargetFoodTemperature(targetFoodTemperature);
-            display.updateTargetFoodTemperature(targetFoodTemperature);
-            $("#targetFoodTemperatureModal").modal('hide');
-          });
-
-          $("#targetPitTemperatureSave").click(function(){
-            targetPitTemperature = display.convertFromTemperatureUnit($("#configTargetPitTemperatureRange").val());
-            config.setTargetPitTemperature(targetPitTemperature);
-            ikamand.start(targetPitTemperature, config.getTargetFoodTemperature());
-            display.forcedRefresh();
-            $("#targetPitTemperatureModal").modal('hide');
-          });
-
-          $("#configStatus").click(function(){
-            var lastData = ikamand.lastData();
-            if( lastData != undefined ){
-              ikamand.lastData().then(d=>{
-                if(d.active == 0 && d.targetPitTemperature == 0 ){
-                  $("#targetPitTemperatureModal").modal("show");
-                } else {
-                  d.active==0 ? ikamand.start(d.targetPitTemperature, config.getTargetFoodTemperature()) : ikamand.stop();
-                  display.forcedRefresh();
-                }
-              });
-            }
-          });
-
-          window.scrollTo(0,1);
+        $("#configSave").click(function(){
+          config.setRefreshPeriod($("#refreshPeriodRange").val());
+          config.setTemperatureUnit($("#configTemperatureUnitCelsius").is(":checked") ? config.temperatureUnit.celsius : ($("#configTemperatureUnitFahrenheit").is(":checked") ? config.temperatureUnit.fahrenheit : config.temperatureUnit.celsius  ));
           display.refresh();
-          chart.draw();
-          setInterval(function(){display.refresh(); chart.refresh();}, ikamandRefreshPeriod * 1000);
-        }
+          chart.refresh();
+          $("#configModal").modal('hide');
+        });
+
+        $("#targetFoodTemperatureSave").click(function(){
+          targetFoodTemperature = display.convertFromTemperatureUnit($("#configTargetFoodTemperatureRange").val());
+          config.setTargetFoodTemperature(targetFoodTemperature);
+          display.updateTargetFoodTemperature(targetFoodTemperature);
+          $("#targetFoodTemperatureModal").modal('hide');
+        });
+
+        $("#targetPitTemperatureSave").click(function(){
+          targetPitTemperature = display.convertFromTemperatureUnit($("#configTargetPitTemperatureRange").val());
+          config.setTargetPitTemperature(targetPitTemperature);
+          ikamand.start(targetPitTemperature, config.getTargetFoodTemperature());
+          display.forcedRefresh();
+          $("#targetPitTemperatureModal").modal('hide');
+        });
+
+        $("#configStatus").click(function(){
+          var lastData = ikamand.lastData();
+          if( lastData != undefined ){
+            ikamand.lastData().then(d=>{
+              if(d.active == 0 && d.targetPitTemperature == 0 ){
+                $("#targetPitTemperatureModal").modal("show");
+              } else {
+                d.active==0 ? ikamand.start(d.targetPitTemperature, config.getTargetFoodTemperature()) : ikamand.stop();
+                display.forcedRefresh();
+              }
+            });
+          }
+        });
+
+        window.scrollTo(0,1);
+        display.refresh();
+        chart.draw();
+        setInterval(function(){display.refresh(); chart.refresh();}, (config.getRefreshPeriod() ?? config.getDefaultRefreshPeriod()) * 1000);
       });
     </script>
   </body>
