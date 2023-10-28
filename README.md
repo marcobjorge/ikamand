@@ -54,8 +54,7 @@ Sure - thank you for your help. Please open a PR and I'll look at it as soon as 
 
 Yes, please:
 * Improvements on styling and responsive behavior
-* Trim the charts to the last `N` hours (configurable)
-* Store the charts data in permanent storage (survive refresh)
+* Compact historical data as usage increases (celing on max memory/cpu usage)
 * Support for the grill mode (fan at `100%` for some amount of time)
 * Serve all HTML from the public folder (instead of only serving `index.html`)
 
