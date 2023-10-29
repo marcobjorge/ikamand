@@ -401,6 +401,19 @@
         const pushDataIntoHistory = function(d){
           const currentTime = new Date().getTime();
           historicalData[currentTime] = d;
+
+          // dataset compaction
+          // if there are more than X data points, remove some of them
+          const timestamps = Object.keys(historicalData);
+          if( timestamps.length > 512){
+            historicalData = timestamps.filter((t,i) => i%10!=0).reduce((obj, key) => {
+                obj[key] = historicalData[key];
+                return obj;
+              },
+              {}
+            );
+          }
+
           updateHistoricalData(historicalData);
         }
 
@@ -442,7 +455,7 @@
 
         const fetchAndDecodeData = function (url, options){
           return fetchData(url, options).then(response => {
-             console.log(response);
+             // console.log(response);
              const obj = decodeData(response);
              return obj;
           });
