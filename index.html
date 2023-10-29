@@ -65,28 +65,28 @@
             <div class="d-flex flex-row text-nowrap justify-content-center"><p>target pit temp</p></div>
           </a>
         </div>
-        <div class="col" style="display:none;" id="displayProbe1">
+        <div class="col" style="display:none;" id="displayProbe1Group">
           <div class="d-flex flex-row justify-content-center">
             <div class="d-flex d-inline-flex align-items-end p-0"><h1 id="displayProbe1Temperature" class="display-1" style="display:inline;">-</h1></div>
             <div class="d-flex d-inline-flex align-items-end p-0"><p class="display-temperature-unit"></p></div>
           </div>
           <div class="d-flex flex-row text-nowrap justify-content-center"><p>probe 1 temp</p></div>
         </div>
-        <div class="col" style="display:none;" id="displayProbe2">
+        <div class="col" style="display:none;" id="displayProbe2Group">
           <div class="d-flex flex-row justify-content-center">
             <div class="d-flex d-inline-flex align-items-end p-0"><h1 id="displayProbe2Temperature" class="display-1" style="display:inline;">-</h1></div>
             <div class="d-flex d-inline-flex align-items-end p-0"><p class="display-temperature-unit"></p></div>
           </div>
           <div class="d-flex flex-row text-nowrap justify-content-center"><p>probe 2 temp</p></div>
         </div>
-        <div class="col" style="display:none;" id="displayProbe3">
+        <div class="col" style="display:none;" id="displayProbe3Group">
           <div class="d-flex flex-row justify-content-center">
             <div class="d-flex d-inline-flex align-items-end p-0"><h1 id="displayProbe3Temperature" class="display-1" style="display:inline;">-</h1></div>
             <div class="d-flex d-inline-flex align-items-end p-0"><p class="display-temperature-unit"></p></div>
           </div>
           <div class="d-flex flex-row text-nowrap justify-content-center"><p>probe 3 temp</p></div>
         </div>
-        <div class="col" style="display:none;" data-bs-toggle="modal" data-bs-target="#targetFoodTemperatureModal" id="displayTargetFoodTemperature">
+        <div class="col" style="display:none;" data-bs-toggle="modal" data-bs-target="#targetFoodTemperatureModal" id="displayTargetFoodTemperatureGroup">
           <a class="nav-link active" href="#">
             <div class="d-flex flex-row justify-content-center">
               <div class="d-flex d-inline-flex align-items-end p-0"><h1 id="displayTargetFoodTemperature" class="display-1" style="display:inline;">-</h1></div>
@@ -97,7 +97,7 @@
         </div>
       </div>
       <div class="row">
-        <div class="col">
+        <div class="col" id="charts" style="display:none;">
           <canvas id="pitTemperatureChart"></canvas>
           <canvas style="display:none;" id="foodTemperatureChart"></canvas>
         </div>
@@ -242,7 +242,7 @@
           }
           if(probe2HasData){
             datasets.push({
-              label: 'probe 1 temp',
+              label: 'probe 2 temp',
               backgroundColor: 'rgba(255,230,181, .1)',
               borderColor: 'rgba(255,230,181, .8)',
               data: Object.values(ikamand.getHistoricalData()).map(d => d.probe2Temperature).map(t => t >= 400 || t <= 0 ? undefined: display.convertToTemperatureUnit(t)),
@@ -250,7 +250,7 @@
           }
           if(probe3HasData){
             datasets.push({
-              label: 'probe 1 temp',
+              label: 'probe 3 temp',
               backgroundColor: 'rgba(212,255,207, .1)',
               borderColor: 'rgba(212,255,207, .8)',
               data: Object.values(ikamand.getHistoricalData()).map(d => d.probe3Temperature).map(t => t >= 400 || t <= 0 ? undefined: display.convertToTemperatureUnit(t)),
@@ -271,13 +271,16 @@
 
         return {
           refresh: function(){
-            pitTemperatureChart.data = getPitTemperatureData();
-            pitTemperatureChart.options.scales.yAxes[0].ticks.max = display.convertToTemperatureUnit(400);
-            pitTemperatureChart.update();
+            if( Object.keys(ikamand.getHistoricalData()).length > 0 ){
+              pitTemperatureChart.data = getPitTemperatureData();
+              pitTemperatureChart.update();
 
-            foodTemperatureChart.data = getFoodTemperatureData();
-            foodTemperatureChart.options.scales.yAxes[0].ticks.max = display.convertToTemperatureUnit(400);
-            foodTemperatureChart.update();
+              foodTemperatureChart.data = getFoodTemperatureData();
+              foodTemperatureChart.update();
+              $("#charts").show();
+            } else {
+              $("#charts").hide();
+            }
           },
           draw: function(){
             const pitTemperatureChartElement = document.getElementById("pitTemperatureChart").getContext('2d');
@@ -293,7 +296,6 @@
                   yAxes: [{
                     ticks: {
                       beginAtZero: true,
-                      max: display.convertToTemperatureUnit(400),
                     }
                   }]
                 }
@@ -312,7 +314,6 @@
                   yAxes: [{
                     ticks: {
                       beginAtZero: true,
-                      max: display.convertToTemperatureUnit(400),
                     }
                   }]
                 }
@@ -553,15 +554,15 @@
             };
 
             var anyActiveProbe = false;
-            anyActiveProbe = updateProbeVisibility("#displayProbe1", d.probe1Temperature) || anyActiveProbe;
-            anyActiveProbe = updateProbeVisibility("#displayProbe2", d.probe2Temperature) || anyActiveProbe;
-            anyActiveProbe = updateProbeVisibility("#displayProbe3", d.probe3Temperature) || anyActiveProbe;
+            anyActiveProbe = updateProbeVisibility("#displayProbe1Group", d.probe1Temperature) || anyActiveProbe;
+            anyActiveProbe = updateProbeVisibility("#displayProbe2Group", d.probe2Temperature) || anyActiveProbe;
+            anyActiveProbe = updateProbeVisibility("#displayProbe3Group", d.probe3Temperature) || anyActiveProbe;
 
             if(anyActiveProbe){
-              $('#displayTargetFoodTemperature').show();
+              $('#displayTargetFoodTemperatureGroup').show();
               $("#foodTemperatureChart").show();
             } else {
-              $('#displayTargetFoodTemperature').hide();
+              $('#displayTargetFoodTemperatureGroup').hide();
               $("#foodTemperatureChart").hide();
             }
           });
@@ -648,6 +649,13 @@
         $("#configSave").click(function(){
           config.setRefreshPeriod($("#refreshPeriodRange").val());
           config.setTemperatureUnit($("#configTemperatureUnitCelsius").is(":checked") ? config.temperatureUnit.celsius : ($("#configTemperatureUnitFahrenheit").is(":checked") ? config.temperatureUnit.fahrenheit : config.temperatureUnit.celsius  ));
+
+          display.updateTargetFoodTemperature();
+          display.updateTargetPitTemperature();
+          display.updateTemperatureUnit();
+          display.updateRefreshPeriod();
+          display.updateTemperatureUnit();
+
           display.refresh();
           chart.refresh();
           $("#configModal").modal('hide');
@@ -687,7 +695,6 @@
           chart.refresh();
         });
 
-        window.scrollTo(0,1);
         display.refresh();
         chart.draw();
         setInterval(function(){display.refresh(); chart.refresh();}, (config.getRefreshPeriod() ?? config.getDefaultRefreshPeriod()) * 1000);
