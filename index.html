@@ -10,6 +10,9 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@^3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/luxon@^2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-luxon@^1"></script>
   </head>
   <body>
     <nav class="navbar bg-body-tertiary">
@@ -201,7 +204,6 @@
     </div>
   </div>
 </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 
     <script>
@@ -210,26 +212,27 @@
         var foodTemperatureChart = undefined;
 
         const getPitTemperatureData = function(){
+          var historicalData = ikamand.getHistoricalData();
           return {
-            labels: Object.keys(ikamand.getHistoricalData()).map(t => new Date(Number(t)).toLocaleTimeString()),
             datasets: [{
               label: 'current pit temp',
               backgroundColor: 'rgba(212,199,178, .1)',
               borderColor: 'rgba(212,199,178, .8)',
-              data: Object.values(ikamand.getHistoricalData()).map(d => d.currentPitTemperature).map(t => t >= 400 || t <= 0 ? undefined: display.convertToTemperatureUnit(t)),
+              data: Object.keys(historicalData).map(k => { return {x: new Number(k), y: historicalData[k].currentPitTemperature} }).filter(p => p.y < 400 && p.y > 0).map(p => {return {x: p.x, y: display.convertToTemperatureUnit(p.y)}}),
             },{
               label: 'target pit temp',
               backgroundColor: 'rgba(220,238,180, .0)',
               borderColor: 'rgba(220,238,180, .8)',
-              data: Object.values(ikamand.getHistoricalData()).map(d => display.convertToTemperatureUnit(d.targetPitTemperature)),
+              data: Object.keys(historicalData).map(k => { return {x: new Number(k), y: historicalData[k].targetPitTemperature} }).filter(p => p.y < 400 && p.y > 0).map(p => {return {x: p.x, y: display.convertToTemperatureUnit(p.y)}}),
             }]
           }
         };
 
         const getFoodTemperatureData = function(){
-          var probe1HasData = Object.values(ikamand.getHistoricalData()).filter(d => d.probe1Temperature != 400).length > 0;
-          var probe2HasData = Object.values(ikamand.getHistoricalData()).filter(d => d.probe2Temperature != 400).length > 0;
-          var probe3HasData = Object.values(ikamand.getHistoricalData()).filter(d => d.probe3Temperature != 400).length > 0;
+          var historicalData = ikamand.getHistoricalData();
+          var probe1HasData = Object.values(historicalData).filter(d => d.probe1Temperature != 400).length > 0;
+          var probe2HasData = Object.values(historicalData).filter(d => d.probe2Temperature != 400).length > 0;
+          var probe3HasData = Object.values(historicalData).filter(d => d.probe3Temperature != 400).length > 0;
 
           var datasets=[];
           if(probe1HasData){
@@ -237,7 +240,7 @@
               label: 'probe 1 temp',
               backgroundColor: 'rgba(221,221,221, .1)',
               borderColor: 'rgba(221,221,221, .8)',
-              data: Object.values(ikamand.getHistoricalData()).map(d => d.probe1Temperature).map(t => t >= 400 || t <= 0 ? undefined: display.convertToTemperatureUnit(t)),
+              data: Object.keys(historicalData).map(k => { return {x: new Number(k), y: historicalData[k].probe1Temperature} }).filter(p => p.y < 400 && p.y > 0).map(p => {return {x: p.x, y: display.convertToTemperatureUnit(p.y)}}),
             });
           }
           if(probe2HasData){
@@ -245,7 +248,7 @@
               label: 'probe 2 temp',
               backgroundColor: 'rgba(255,230,181, .1)',
               borderColor: 'rgba(255,230,181, .8)',
-              data: Object.values(ikamand.getHistoricalData()).map(d => d.probe2Temperature).map(t => t >= 400 || t <= 0 ? undefined: display.convertToTemperatureUnit(t)),
+              data: Object.keys(historicalData).map(k => { return {x: new Number(k), y: historicalData[k].probe2Temperature} }).filter(p => p.y < 400 && p.y > 0).map(p => {return {x: p.x, y: display.convertToTemperatureUnit(p.y)}}),
             });
           }
           if(probe3HasData){
@@ -253,18 +256,17 @@
               label: 'probe 3 temp',
               backgroundColor: 'rgba(212,255,207, .1)',
               borderColor: 'rgba(212,255,207, .8)',
-              data: Object.values(ikamand.getHistoricalData()).map(d => d.probe3Temperature).map(t => t >= 400 || t <= 0 ? undefined: display.convertToTemperatureUnit(t)),
+              data: Object.keys(historicalData).map(k => { return {x: new Number(k), y: historicalData[k].probe3Temperature} }).filter(p => p.y < 400 && p.y > 0).map(p => {return {x: p.x, y: display.convertToTemperatureUnit(p.y)}}),
             });
           }
           datasets.push({
             label: 'target food temp',
             backgroundColor: 'rgba(253,173,158, .0)',
             borderColor: 'rgba(253,173,158, .8)',
-            data: Object.keys(ikamand.getHistoricalData()).map(t => display.convertToTemperatureUnit(config.getTargetFoodTemperature())),
+            data: Object.keys(historicalData).map(k => { return {x: new Number(k), y: display.convertToTemperatureUnit(config.getTargetFoodTemperature())}}),
           });
 
           return {
-            labels: Object.keys(ikamand.getHistoricalData()).map(t => new Date(Number(t)).toLocaleTimeString()),
             datasets,
           }
         };
@@ -288,16 +290,22 @@
               type: 'line',
               data: getPitTemperatureData(),
               options: {
+                responsive: true,
                 animation: false,
                 legend: {
                   position: "bottom",
                 },
                 scales: {
-                  yAxes: [{
-                    ticks: {
-                      beginAtZero: true,
-                    }
-                  }]
+                  x: {
+                    type: 'time',
+                    position: 'bottom',
+                    time: {
+                      minUnit: 'second'
+                    },
+                  },
+                  y: {
+                    min: 0,
+                  },
                 }
               },
             });
@@ -306,16 +314,22 @@
               type: 'line',
               data: getFoodTemperatureData(),
               options: {
+                responsive: true,
                 animation: false,
                 legend: {
                   position: "bottom",
                 },
                 scales: {
-                  yAxes: [{
-                    ticks: {
-                      beginAtZero: true,
-                    }
-                  }]
+                  x: {
+                    type: 'time',
+                    position: 'bottom',
+                    time: {
+                      minUnit: 'second'
+                    },
+                  },
+                  y: {
+                    min: 0,
+                  },
                 }
               },
             });
@@ -406,7 +420,7 @@
           // if there are more than X data points, remove some of them
           const timestamps = Object.keys(historicalData);
           if( timestamps.length > 512){
-            historicalData = timestamps.filter((t,i) => i%10!=0).reduce((obj, key) => {
+            historicalData = timestamps.filter((t,i) => i%2!=0).reduce((obj, key) => {
                 obj[key] = historicalData[key];
                 return obj;
               },
