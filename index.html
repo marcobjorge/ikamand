@@ -263,7 +263,7 @@
             label: 'target food temp',
             backgroundColor: 'rgba(253,173,158, .0)',
             borderColor: 'rgba(253,173,158, .8)',
-            data: Object.keys(historicalData).map(k => { return {x: new Number(k), y: display.convertToTemperatureUnit(config.getTargetFoodTemperature())}}),
+            data: Object.keys(historicalData).map(k => { return {x: new Number(k), y: display.convertToTemperatureUnit(config.getTargetFoodTemperature() ?? config.getDefaultTargetFoodTemperature())}}),
           });
 
           return {
@@ -707,7 +707,7 @@
         $("#targetPitTemperatureSave").click(function(){
           targetPitTemperature = display.convertFromTemperatureUnit($("#configTargetPitTemperatureRange").val());
           config.setTargetPitTemperature(targetPitTemperature);
-          ikamand.start(targetPitTemperature, config.getTargetFoodTemperature());
+          ikamand.start(targetPitTemperature, config.getTargetFoodTemperature() ?? config.getDefaultTargetFoodTemperature());
           display.forcedRefresh();
           $("#targetPitTemperatureModal").modal('hide');
         });
@@ -719,7 +719,7 @@
               if(d.active == 0 && d.targetPitTemperature == 0 ){
                 $("#targetPitTemperatureModal").modal("show");
               } else {
-                d.active==0 ? ikamand.start(d.targetPitTemperature, config.getTargetFoodTemperature()) : ikamand.stop();
+                d.active==0 ? ikamand.start(d.targetPitTemperature, config.getTargetFoodTemperature() ?? config.getDefaultTargetFoodTemperature()) : ikamand.stop();
                 display.forcedRefresh();
               }
             });
