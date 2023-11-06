@@ -462,6 +462,15 @@
         }
 
         const fetchData = function(url, options) {
+          const refreshPeriod = config.getRefreshPeriod() ?? config.getDefaultRefreshPeriod();
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), refreshPeriod * 1000 );
+
+          options = {
+            ...options,
+            signal: controller.signal
+          };
+
           return fetch(url, options).then(response => {
             if (!response.ok) {
               throw new Error("Request failed");
