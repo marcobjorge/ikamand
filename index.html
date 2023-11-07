@@ -100,8 +100,8 @@
         </div>
       </div>
       <div class="row">
-        <div class="col" id="charts" style="display:none;">
-          <canvas id="pitTemperatureChart"></canvas>
+        <div class="col">
+          <canvas style="display:none;" id="pitTemperatureChart"></canvas>
           <canvas style="display:none;" id="foodTemperatureChart"></canvas>
         </div>
       </div>
@@ -213,26 +213,26 @@
 
         const getPitTemperatureData = function(){
           var historicalData = ikamand.getHistoricalData();
+          var historicalDataKeys = Object.keys(historicalData);
+
           return {
             datasets: [{
               label: 'current pit temp',
               backgroundColor: 'rgba(212,199,178, .1)',
               borderColor: 'rgba(212,199,178, .8)',
-              data: Object.keys(historicalData).map(k => { return {x: new Number(k), y: historicalData[k].currentPitTemperature} }).filter(p => p.y < 400 && p.y > 0).map(p => {return {x: p.x, y: display.convertToTemperatureUnit(p.y)}}),
+              data: historicalDataKeys.map(k => { return {x: new Number(k), y: historicalData[k].currentPitTemperature} }).filter(p => p.y != 400).map(p => {return {x: p.x, y: display.convertToTemperatureUnit(p.y)}}),
             },{
               label: 'target pit temp',
               backgroundColor: 'rgba(220,238,180, .0)',
               borderColor: 'rgba(220,238,180, .8)',
-              data: Object.keys(historicalData).map(k => { return {x: new Number(k), y: historicalData[k].targetPitTemperature} }).filter(p => p.y < 400 && p.y > 0).map(p => {return {x: p.x, y: display.convertToTemperatureUnit(p.y)}}),
+              data: historicalDataKeys.map(k => { return {x: new Number(k), y: historicalData[k].targetPitTemperature} }).filter(p => p.y != 400).map(p => {return {x: p.x, y: display.convertToTemperatureUnit(p.y)}}),
             }]
           }
         };
 
-        const getFoodTemperatureData = function(){
+        const getFoodTemperatureData = function(probe1HasData, probe2HasData, probe3HasData){
           var historicalData = ikamand.getHistoricalData();
-          var probe1HasData = Object.values(historicalData).filter(d => d.probe1Temperature != 400).length > 0;
-          var probe2HasData = Object.values(historicalData).filter(d => d.probe2Temperature != 400).length > 0;
-          var probe3HasData = Object.values(historicalData).filter(d => d.probe3Temperature != 400).length > 0;
+          var historicalDataKeys = Object.keys(historicalData);
 
           var datasets=[];
           if(probe1HasData){
@@ -240,7 +240,7 @@
               label: 'probe 1 temp',
               backgroundColor: 'rgba(221,221,221, .1)',
               borderColor: 'rgba(221,221,221, .8)',
-              data: Object.keys(historicalData).map(k => { return {x: new Number(k), y: historicalData[k].probe1Temperature} }).filter(p => p.y < 400 && p.y > 0).map(p => {return {x: p.x, y: display.convertToTemperatureUnit(p.y)}}),
+              data: historicalDataKeys.map(k => { return {x: new Number(k), y: historicalData[k].probe1Temperature} }).filter(p => p.y != 400).map(p => {return {x: p.x, y: display.convertToTemperatureUnit(p.y)}}),
             });
           }
           if(probe2HasData){
@@ -248,7 +248,7 @@
               label: 'probe 2 temp',
               backgroundColor: 'rgba(255,230,181, .1)',
               borderColor: 'rgba(255,230,181, .8)',
-              data: Object.keys(historicalData).map(k => { return {x: new Number(k), y: historicalData[k].probe2Temperature} }).filter(p => p.y < 400 && p.y > 0).map(p => {return {x: p.x, y: display.convertToTemperatureUnit(p.y)}}),
+              data: historicalDataKeys.map(k => { return {x: new Number(k), y: historicalData[k].probe2Temperature} }).filter(p => p.y != 400).map(p => {return {x: p.x, y: display.convertToTemperatureUnit(p.y)}}),
             });
           }
           if(probe3HasData){
@@ -256,14 +256,14 @@
               label: 'probe 3 temp',
               backgroundColor: 'rgba(212,255,207, .1)',
               borderColor: 'rgba(212,255,207, .8)',
-              data: Object.keys(historicalData).map(k => { return {x: new Number(k), y: historicalData[k].probe3Temperature} }).filter(p => p.y < 400 && p.y > 0).map(p => {return {x: p.x, y: display.convertToTemperatureUnit(p.y)}}),
+              data: historicalDataKeys.map(k => { return {x: new Number(k), y: historicalData[k].probe3Temperature} }).filter(p => p.y != 400).map(p => {return {x: p.x, y: display.convertToTemperatureUnit(p.y)}}),
             });
           }
           datasets.push({
             label: 'target food temp',
             backgroundColor: 'rgba(253,173,158, .0)',
             borderColor: 'rgba(253,173,158, .8)',
-            data: Object.keys(historicalData).map(k => { return {x: new Number(k), y: display.convertToTemperatureUnit(config.getTargetFoodTemperature() ?? config.getDefaultTargetFoodTemperature())}}),
+            data: historicalDataKeys.map(k => { return {x: new Number(k), y: display.convertToTemperatureUnit(config.getTargetFoodTemperature() ?? config.getDefaultTargetFoodTemperature())}}),
           });
 
           return {
@@ -273,15 +273,27 @@
 
         return {
           refresh: function(){
-            if( Object.keys(ikamand.getHistoricalData()).length > 0 ){
+            var historicalData = ikamand.getHistoricalData();
+            var historicalDataKeys = Object.keys(historicalData);
+
+            var pitTemperatureHasData = historicalDataKeys.filter(d => historicalData[d].currentPitTemperature != 400).length > 0;
+            if( pitTemperatureHasData ){
               pitTemperatureChart.data = getPitTemperatureData();
               pitTemperatureChart.update();
-
-              foodTemperatureChart.data = getFoodTemperatureData();
-              foodTemperatureChart.update();
-              $("#charts").show();
+              $("#pitTemperatureChart").show();
             } else {
-              $("#charts").hide();
+              $("#pitTemperatureChart").hide();
+            }
+
+            var probe1TemperatureHasData = historicalDataKeys.filter(d => historicalData[d].probe1Temperature != 400).length > 0;
+            var probe2TemperatureHasData = historicalDataKeys.filter(d => historicalData[d].probe2Temperature != 400).length > 0;
+            var probe3TemperatureHasData = historicalDataKeys.filter(d => historicalData[d].probe3Temperature != 400).length > 0;
+            if( probe1TemperatureHasData || probe2TemperatureHasData || probe3TemperatureHasData  ) {
+              foodTemperatureChart.data = getFoodTemperatureData(probe1TemperatureHasData, probe2TemperatureHasData, probe3TemperatureHasData);
+              foodTemperatureChart.update();
+              $("#foodTemperatureChart").show();
+            } else {
+              $("#foodTemperatureChart").hide();
             }
           },
           draw: function(){
@@ -589,17 +601,14 @@
               }
             };
 
-            var anyActiveProbe = false;
-            anyActiveProbe = updateProbeVisibility("#displayProbe1Group", d.probe1Temperature) || anyActiveProbe;
-            anyActiveProbe = updateProbeVisibility("#displayProbe2Group", d.probe2Temperature) || anyActiveProbe;
-            anyActiveProbe = updateProbeVisibility("#displayProbe3Group", d.probe3Temperature) || anyActiveProbe;
+            var probe1TemperatureHasData = updateProbeVisibility("#displayProbe1Group", d.probe1Temperature);
+            var probe2TemperatureHasData = updateProbeVisibility("#displayProbe2Group", d.probe2Temperature);
+            var probe3TemperatureHasData = updateProbeVisibility("#displayProbe3Group", d.probe3Temperature);
 
-            if(anyActiveProbe){
+            if( probe1TemperatureHasData || probe2TemperatureHasData || probe3TemperatureHasData){
               $('#displayTargetFoodTemperatureGroup').show();
-              $("#foodTemperatureChart").show();
             } else {
               $('#displayTargetFoodTemperatureGroup').hide();
-              $("#foodTemperatureChart").hide();
             }
           });
         };
