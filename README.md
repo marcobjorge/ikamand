@@ -11,7 +11,7 @@ This project is a web app that exposes the capabilities of iKamand to heat the K
 # Requirements
 
 * A server to run the app (e.g. laptop, RaspberryPi)
-  * [NodeJS](https://nodejs.org/en) installed (version `v10.24.1`)
+  * [NodeJS](https://nodejs.org/en) installed (version `v14` or `v15`)
 * An iKamand already connected to your network
 * The IP of the iKamand
 
