@@ -12,6 +12,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@^3"></script>
     <script src="https://cdn.jsdelivr.net/npm/luxon@^2"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-luxon@^1"></script>
+    <script src="/js/config.js"></script>
   </head>
   <body>
     <nav class="navbar bg-body-tertiary">
@@ -262,7 +263,7 @@
             label: 'target food temp',
             backgroundColor: 'rgba(253,173,158, .0)',
             borderColor: 'rgba(253,173,158, .8)',
-            data: historicalDataKeys.map(k => { return {x: new Number(k), y: display.convertToTemperatureUnit(config.getTargetFoodTemperature() ?? config.getDefaultTargetFoodTemperature())}}),
+            data: historicalDataKeys.map(k => { return {x: new Number(k), y: display.convertToTemperatureUnit(config.getTargetFoodTemperature())}}),
           });
 
           return {
@@ -350,73 +351,6 @@
     </script>
     <script type="text/javascript">
       /**
-      * Utilities to manage the configuration.
-      */
-      const config = (function(){
-        var temperatureUnit = {
-            celsius: 1,
-            fahrenheit: 2,
-        };
-
-        return {
-          setRefreshPeriod: function(period){
-            if( period == undefined ){
-              return;
-            }
-            Cookies.set("ikamand.period", period, { expires: 365*10 });
-          },
-          getRefreshPeriod: function(){
-            var period = Cookies.get("ikamand.period");
-            return period;
-          },
-          getDefaultRefreshPeriod: function(){
-            return 5;
-          },
-          setTargetFoodTemperature: function(targetFoodTemperature){
-            if( targetFoodTemperature == undefined ){
-              return;
-            }
-            Cookies.set("ikamand.targetFoodTemperature", targetFoodTemperature, { expires: 365 * 10});
-          },
-          getTargetFoodTemperature: function(){
-            var targetFoodTemperature = Cookies.get("ikamand.targetFoodTemperature");
-            return targetFoodTemperature;
-          },
-          getDefaultTargetFoodTemperature: function(){
-            return 60;
-          },
-          setTargetPitTemperature: function(targetPitTemperature){
-            if( targetPitTemperature == undefined ){
-              return;
-            }
-            Cookies.set("ikamand.targetPitTemperature", targetPitTemperature, { expires: 365 * 10});
-          },
-          getTargetPitTemperature: function(){
-            var targetPitTemperature = Cookies.get("ikamand.targetPitTemperature");
-            return targetPitTemperature;
-          },
-          getDefaultTargetPitTemperature: function(){
-            return 110;
-          },
-          temperatureUnit,
-          setTemperatureUnit: function(temperatureUnit){
-            if( temperatureUnit == undefined ){
-              return;
-            }
-            Cookies.set("ikamand.temperatureUnit", temperatureUnit, { expires: 365 * 10});
-          },
-          getTemperatureUnit: function(){
-            var temperatureUnit = Cookies.get("ikamand.temperatureUnit");
-            return temperatureUnit;
-          },
-          getDefaultTemperatureUnit: function(){
-            return temperatureUnit.celsius;
-          },
-        }
-      })();
-    </script>
-    <script type="text/javascript">
-      /**
       * Utilities to connect to ikamand.
       */
       const ikamand = (function(){
@@ -487,7 +421,7 @@
         }
 
         const fetchData = function(url, options) {
-          const refreshPeriod = config.getRefreshPeriod() ?? config.getDefaultRefreshPeriod();
+          const refreshPeriod = config.getRefreshPeriod();
           const controller = new AbortController();
           const timeoutId = setTimeout(() => controller.abort(), refreshPeriod * 1000 );
 
@@ -613,7 +547,7 @@
         };
 
         var convertToTemperatureUnit = function(temperature){
-          var temperatureUnit = config.getTemperatureUnit() ?? config.getDefaultTemperatureUnit();
+          var temperatureUnit = config.getTemperatureUnit();
           if( temperatureUnit == config.temperatureUnit.celsius ){
             return temperature;
           } else if( temperatureUnit == config.temperatureUnit.fahrenheit){
@@ -632,7 +566,7 @@
           },
           updateTargetFoodTemperature: function(targetFoodTemperature){
             if( targetFoodTemperature == undefined ){
-               targetFoodTemperature = config.getTargetFoodTemperature() ?? config.getDefaultTargetFoodTemperature();
+               targetFoodTemperature = config.getTargetFoodTemperature();
             }
             $("#displayTargetFoodTemperature").html(convertToTemperatureUnit(targetFoodTemperature));
             $("#configTargetFoodTemperatureRange").val(convertToTemperatureUnit(targetFoodTemperature));
@@ -643,7 +577,7 @@
           },
           updateTargetPitTemperature: function(targetPitTemperature){
             if( targetPitTemperature == undefined ){
-               targetPitTemperature = config.getTargetPitTemperature() ?? config.getDefaultTargetPitTemperature();
+               targetPitTemperature = config.getTargetPitTemperature();
             }
             $("#configTargetPitTemperatureRange").val(convertToTemperatureUnit(targetPitTemperature));
             $("#configTargetPitTemperatureRange").prop('min', 0);
@@ -652,7 +586,7 @@
           },
           updateTemperatureUnit: function(temperatureUnit){
             if( temperatureUnit == undefined ){
-               temperatureUnit = config.getTemperatureUnit() ?? config.getDefaultTemperatureUnit();
+               temperatureUnit = config.getTemperatureUnit();
             }
             $("#configTemperatureUnitCelsius").prop('checked', temperatureUnit == config.temperatureUnit.celsius);
             $("#configTemperatureUnitFahrenheit").prop('checked', temperatureUnit == config.temperatureUnit.fahrenheit);
@@ -660,7 +594,7 @@
           },
           convertToTemperatureUnit,
           convertFromTemperatureUnit: function(temperature){
-            var temperatureUnit = config.getTemperatureUnit() ?? config.getDefaultTemperatureUnit();
+            var temperatureUnit = config.getTemperatureUnit();
             if( temperatureUnit == config.temperatureUnit.celsius ){
               return temperature;
             } else if( temperatureUnit == config.temperatureUnit.fahrenheit){
@@ -671,7 +605,7 @@
           },
           updateRefreshPeriod: function(refreshPeriod){
             if( refreshPeriod == undefined ){
-              refreshPeriod = config.getRefreshPeriod() ?? config.getDefaultRefreshPeriod();
+              refreshPeriod = config.getRefreshPeriod();
             }
             $("#refreshPeriodRange").val(refreshPeriod);
             $("#refreshPeriodVal").html(refreshPeriod);
@@ -715,7 +649,7 @@
         $("#targetPitTemperatureSave").click(function(){
           targetPitTemperature = display.convertFromTemperatureUnit($("#configTargetPitTemperatureRange").val());
           config.setTargetPitTemperature(targetPitTemperature);
-          ikamand.start(targetPitTemperature, config.getTargetFoodTemperature() ?? config.getDefaultTargetFoodTemperature());
+          ikamand.start(targetPitTemperature, config.getTargetFoodTemperature());
           display.forcedRefresh();
           $("#targetPitTemperatureModal").modal('hide');
         });
@@ -727,7 +661,7 @@
               if(d.active == 0 && d.targetPitTemperature == 0 ){
                 $("#targetPitTemperatureModal").modal("show");
               } else {
-                d.active==0 ? ikamand.start(d.targetPitTemperature, config.getTargetFoodTemperature() ?? config.getDefaultTargetFoodTemperature()) : ikamand.stop();
+                d.active==0 ? ikamand.start(d.targetPitTemperature, config.getTargetFoodTemperature()) : ikamand.stop();
                 display.forcedRefresh();
               }
             });
@@ -741,7 +675,7 @@
 
         display.refresh();
         chart.draw();
-        setInterval(function(){display.refresh(); chart.refresh();}, (config.getRefreshPeriod() ?? config.getDefaultRefreshPeriod()) * 1000);
+        setInterval(function(){display.refresh(); chart.refresh();}, (config.getRefreshPeriod()) * 1000);
       });
     </script>
   </body>
