@@ -5,6 +5,14 @@ const ikamand = (function(){
   var lastData = undefined;
   var historicalData = JSON.parse(sessionStorage.getItem("historicalData")) ?? {};
 
+  const uuidv4 = function () {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+      var r = (Math.random() * 16) | 0,
+        v = c == 'x' ? r : (r & 0x3) | 0x8;
+      return v.toString(16);
+    });
+  };
+
   const pushDataIntoHistory = function(d){
     const currentTime = new Date().getTime();
     historicalData[currentTime] = d;
@@ -125,7 +133,7 @@ const ikamand = (function(){
 
       const payload = new URLSearchParams();
       payload.set('acs', '1');
-      payload.set('csid', crypto.randomUUID());
+      payload.set('csid', uuidv4());
       payload.set('tpt', targetPitTemperature);
       payload.set('sce', currentTime + 24*60*60);
       payload.set('p', '1');
