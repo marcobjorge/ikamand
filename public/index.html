@@ -456,6 +456,19 @@
       })();
     </script>
     <script type="text/javascript">
+      const scheduler = (function(){
+        var intervalId;
+
+        return {
+          start: function(){
+            if( intervalId != undefined ){
+              clearInterval(intervalId);
+            }
+            intervalId = setInterval(function(){display.refresh(); chart.refresh();}, config.getRefreshPeriod() * 1000);
+          },
+        };
+      })();
+
       /**
       * Start the controller.
       */
@@ -479,6 +492,7 @@
           display.refresh();
           chart.refresh();
           $("#configModal").modal('hide');
+          scheduler.start();
         });
 
         $("#targetFoodTemperatureSave").click(function(){
@@ -517,7 +531,7 @@
 
         display.refresh();
         chart.draw();
-        setInterval(function(){display.refresh(); chart.refresh();}, (config.getRefreshPeriod()) * 1000);
+        scheduler.start();
       });
     </script>
   </body>
