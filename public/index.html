@@ -125,6 +125,17 @@
               <h1 id="configTargetFoodTemperatureVal"></h1>
             </div>
           </div>
+          <div class="row row-cols-3">
+            <div class="col col-sm" id="targetFoodTemperatureRibs">
+              <img src="/images/ribs.png" class="img-thumbnail" alt="ribs">
+            </div>
+            <div class="col col-sm" id="targetFoodTemperatureBrisket">
+              <img src="/images/brisket.png" class="img-thumbnail" alt="brisket">
+            </div>
+            <div class="col col-sm" id="targetFoodTemperaturePizza">
+              <img src="/images/pizza.png" class="img-thumbnail" alt="pizza">
+            </div>
+          </div>
         </form>
       </div>
       <div class="modal-footer">
@@ -150,6 +161,17 @@
             </div>
             <div class="col-sm-auto">
               <h1 id="configTargetPitTemperatureVal"></h1>
+            </div>
+          </div>
+          <div class="row row-cols-3">
+            <div class="col col-sm" id="targetPitTemperatureRibs">
+              <img src="/images/ribs.png" class="img-thumbnail" alt="ribs">
+            </div>
+            <div class="col col-sm" id="targetPitTemperatureBrisket">
+              <img src="/images/brisket.png" class="img-thumbnail" alt="brisket">
+            </div>
+            <div class="col col-sm" id="targetPitTemperaturePizza">
+              <img src="/images/pizza.png" class="img-thumbnail" alt="pizza">
             </div>
           </div>
         </form>
@@ -414,7 +436,7 @@
             $("#configTargetFoodTemperatureRange").val(convertToTemperatureUnit(targetFoodTemperature));
             $("#configTargetFoodTemperatureRange").prop('min', 0);
             $("#configTargetFoodTemperatureRange").prop('max', convertToTemperatureUnit(380));
-            $("#configTargetFoodTemperatureVal").html(convertToTemperatureUnit(targetFoodTemperature));
+            $("#configTargetFoodTemperatureVal").html($("#configTargetFoodTemperatureRange").val());
 
           },
           updateTargetPitTemperature: function(targetPitTemperature){
@@ -424,7 +446,7 @@
             $("#configTargetPitTemperatureRange").val(convertToTemperatureUnit(targetPitTemperature));
             $("#configTargetPitTemperatureRange").prop('min', 0);
             $("#configTargetPitTemperatureRange").prop('max', convertToTemperatureUnit(380));
-            $("#configTargetPitTemperatureVal").html(convertToTemperatureUnit(targetPitTemperature));
+            $("#configTargetPitTemperatureVal").html($("#configTargetPitTemperatureRange").val());
           },
           updateTemperatureUnit: function(temperatureUnit){
             if( temperatureUnit == undefined ){
@@ -479,6 +501,16 @@
         display.updateRefreshPeriod();
         display.updateTemperatureUnit();
 
+        const setTargetPitTemperature = function(targetPitTemperature){
+          config.setTargetPitTemperature(targetPitTemperature);
+          display.updateTargetPitTemperature(targetPitTemperature);
+        };
+
+        const setTargetFoodTemperature = function(targetFoodTemperature){
+          config.setTargetFoodTemperature(targetFoodTemperature);
+          display.updateTargetFoodTemperature(targetFoodTemperature);
+        };
+
         $("#configSave").click(function(){
           config.setRefreshPeriod($("#refreshPeriodRange").val());
           config.setTemperatureUnit($("#configTemperatureUnitCelsius").is(":checked") ? config.temperatureUnit.celsius : ($("#configTemperatureUnitFahrenheit").is(":checked") ? config.temperatureUnit.fahrenheit : config.temperatureUnit.celsius  ));
@@ -497,14 +529,13 @@
 
         $("#targetFoodTemperatureSave").click(function(){
           targetFoodTemperature = display.convertFromTemperatureUnit($("#configTargetFoodTemperatureRange").val());
-          config.setTargetFoodTemperature(targetFoodTemperature);
-          display.updateTargetFoodTemperature(targetFoodTemperature);
+          setTargetFoodTemperature(targetFoodTemperature);
           $("#targetFoodTemperatureModal").modal('hide');
         });
 
         $("#targetPitTemperatureSave").click(function(){
           targetPitTemperature = display.convertFromTemperatureUnit($("#configTargetPitTemperatureRange").val());
-          config.setTargetPitTemperature(targetPitTemperature);
+          setTargetPitTemperature(targetPitTemperature);
           ikamand.start(targetPitTemperature, config.getTargetFoodTemperature());
           display.forcedRefresh();
           $("#targetPitTemperatureModal").modal('hide');
@@ -522,6 +553,48 @@
               }
             });
           }
+        });
+
+        const temperaturePreset = {
+          ribs: {targetPitTemperature: 110, targetFoodTemperature:95},
+          brisket: {targetPitTemperature: 145, targetFoodTemperature:95},
+          pizza: {targetPitTemperature:350, targetFoodTemperature:80},
+        };
+        const loadTargetPitTemperature = function(targetPitTemperature){
+          $("#configTargetPitTemperatureRange").val(display.convertToTemperatureUnit(targetPitTemperature));
+          $("#configTargetPitTemperatureVal").html($("#configTargetPitTemperatureRange").val());
+        };
+        const loadTargetFoodTemperature = function(targetFoodTemperature){
+          $("#configTargetFoodTemperatureRange").val(display.convertToTemperatureUnit(targetFoodTemperature));
+          $("#configTargetFoodTemperatureVal").html($("#configTargetFoodTemperatureRange").val());
+        };
+        const loadTemperaturePreset = function(preset){
+          loadTargetPitTemperature(preset.targetPitTemperature);
+          loadTargetFoodTemperature(preset.targetFoodTemperature);
+        };
+
+        $("#targetPitTemperatureRibs").click(function(){
+          loadTemperaturePreset(temperaturePreset.ribs);
+        });
+
+        $("#targetPitTemperatureBrisket").click(function(){
+          loadTemperaturePreset(temperaturePreset.brisket);
+        });
+
+        $("#targetPitTemperaturePizza").click(function(){
+          loadTemperaturePreset(temperaturePreset.pizza);
+        });
+
+        $("#targetFoodTemperatureRibs").click(function(){
+          loadTargetFoodTemperature(temperaturePreset.ribs.targetFoodTemperature);
+        });
+
+        $("#targetFoodTemperatureBrisket").click(function(){
+          loadTargetFoodTemperature(temperaturePreset.brisket.targetFoodTemperature);
+        });
+
+        $("#targetFoodTemperaturePizza").click(function(){
+          loadTargetFoodTemperature(temperaturePreset.pizza.targetFoodTemperature);
         });
 
         $("#clearHistory").click(function(){
