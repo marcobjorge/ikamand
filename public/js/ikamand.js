@@ -3,7 +3,6 @@
 */
 const ikamand = (function(){
   var lastData = undefined;
-  var historicalData = JSON.parse(sessionStorage.getItem("historicalData")) ?? {};
 
   const uuidv4 = function () {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
@@ -12,30 +11,6 @@ const ikamand = (function(){
       return v.toString(16);
     });
   };
-
-  const pushDataIntoHistory = function(d){
-    const currentTime = new Date().getTime();
-    historicalData[currentTime] = d;
-
-    // dataset compaction
-    // if there are more than X data points, remove some of them
-    const timestamps = Object.keys(historicalData);
-    if( timestamps.length > 512){
-      historicalData = timestamps.filter((t,i) => i%2!=0).reduce((obj, key) => {
-          obj[key] = historicalData[key];
-          return obj;
-        },
-        {}
-      );
-    }
-
-    updateHistoricalData(historicalData);
-  }
-
-  const updateHistoricalData = function( h ){
-    historicalData = h;
-    sessionStorage.setItem("historicalData", JSON.stringify(h));
-  }
 
   const convertToObject = function (input) {
     const output = {};
@@ -106,7 +81,6 @@ const ikamand = (function(){
   return {
     getData: function(){
       lastData = fetchAndDecodeData(getFullUrl("data"));
-      lastData.then(d => pushDataIntoHistory(d));
       return lastData;
     },
     stop: function(){
@@ -154,12 +128,6 @@ const ikamand = (function(){
     lastData: function(){
       return lastData;
     },
-    getHistoricalData: function(){
-      return historicalData;
-    },
-    clearHistoricalData: function(){
-      updateHistoricalData({});
-    }
   };
 })();
 
