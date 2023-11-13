@@ -107,9 +107,8 @@
         </div>
       </div>
       <div class="row">
-        <div class="col">
-          <canvas style="display:none;" id="pitTemperatureChart"></canvas>
-          <canvas style="display:none;" id="foodTemperatureChart"></canvas>
+       <div class="col">
+          <canvas style="display:none;"  id="temperatureChart"></canvas>
         </div>
       </div>
     </div>
@@ -237,8 +236,27 @@
 
     <script>
       const chart = (function(){
-        var pitTemperatureChart = undefined;
-        var foodTemperatureChart = undefined;
+        const temperatureChart = new Chart(document.getElementById("temperatureChart").getContext('2d'), {
+          type: 'line',
+          data: [],
+          options: {
+            aspectRatio: 1,
+            responsive: true,
+            animation: false,
+            scales: {
+              x: {
+                type: 'time',
+                position: 'bottom',
+                time: {
+                  minUnit: 'second'
+                },
+              },
+              y: {
+                min: 0,
+              },
+            }
+          },
+        });
 
         var currentPitTemperatureData = JSON.parse(sessionStorage.getItem("currentPitTemperatureData")) ?? [];
         var targetPitTemperatureData = JSON.parse(sessionStorage.getItem("targetPitTemperatureData")) ?? [];
@@ -256,54 +274,73 @@
           sessionStorage.setItem("probe3TemperatureData",JSON.stringify(probe3TemperatureData));
         };
 
-        const getPitTemperatureData = function(){
-          return {
-            datasets: [{
-              label: 'current pit temp',
-              backgroundColor: 'rgba(212,199,178, .1)',
-              borderColor: 'rgba(212,199,178, .8)',
-              data: currentPitTemperatureData.map(d => {return {x: d.x, y:display.convertToTemperatureUnit(d.y)}}),
-            },{
-              label: 'target pit temp',
-              backgroundColor: 'rgba(220,238,180, .0)',
-              borderColor: 'rgba(220,238,180, .8)',
-              data: targetPitTemperatureData.map(d => {return {x: d.x, y:display.convertToTemperatureUnit(d.y)}}),
-            }]
-          }
-        };
-
-        const getFoodTemperatureData = function(){
+        const getTemperatureData = function(){
           var datasets=[];
+
+          if(currentPitTemperatureData.length > 0){
+            datasets.push({
+              label: 'current pit temp',
+              backgroundColor: 'rgba(134, 10, 53, 0.5)',
+              borderColor: 'rgba(134, 10, 53, 0.5)',
+              tension: 0.4,
+              cubicInterpolationMode: 'monotone',
+              radius: 0,
+              data: currentPitTemperatureData.map(d => {return {x: d.x, y:display.convertToTemperatureUnit(d.y)}}),
+            });
+          }
+          if(targetPitTemperatureData.length > 0){
+            datasets.push({
+              label: 'target pit temp',
+              backgroundColor: 'rgba(134, 10, 53, 0.1)',
+              borderColor: 'rgba(0, 0, 0, 0.0)',
+              radius: 0,
+              fill: true,
+              data: targetPitTemperatureData.map(d => {return {x: d.x, y:display.convertToTemperatureUnit(d.y)}}),
+            });
+          }
           if(probe1TemperatureData.length > 0){
             datasets.push({
               label: 'probe 1 temp',
-              backgroundColor: 'rgba(221,221,221, .1)',
-              borderColor: 'rgba(221,221,221, .8)',
+              backgroundColor: 'rgba(18, 72, 107, 0.8)',
+              borderColor: 'rgba(18, 72, 107, 0.8)',
+              tension: 0.4,
+              cubicInterpolationMode: 'monotone',
+              radius: 0,
               data: probe1TemperatureData.map(d => {return {x: d.x, y:display.convertToTemperatureUnit(d.y)}}),
             });
           }
           if(probe2TemperatureData.length > 0){
             datasets.push({
               label: 'probe 2 temp',
-              backgroundColor: 'rgba(255,230,181, .1)',
-              borderColor: 'rgba(255,230,181, .8)',
+              backgroundColor: 'rgba(65, 145, 151, 0.8)',
+              borderColor: 'rgba(65, 145, 151, 0.8)',
+              tension: 0.4,
+              cubicInterpolationMode: 'monotone',
+              radius: 0,
               data: probe2TemperatureData.map(d => {return {x: d.x, y:display.convertToTemperatureUnit(d.y)}}),
             });
           }
           if(probe3TemperatureData.length > 0){
             datasets.push({
               label: 'probe 3 temp',
-              backgroundColor: 'rgba(212,255,207, .1)',
-              borderColor: 'rgba(212,255,207, .8)',
+              backgroundColor: 'rgba(120, 214, 198, 0.8)',
+              borderColor: 'rgba(120, 214, 198, 0.8)',
+              tension: 0.4,
+              cubicInterpolationMode: 'monotone',
+              radius: 0,
               data: probe3TemperatureData.map(d => {return {x: d.x, y:display.convertToTemperatureUnit(d.y)}}),
             });
           }
-          datasets.push({
-            label: 'target food temp',
-            backgroundColor: 'rgba(253,173,158, .0)',
-            borderColor: 'rgba(253,173,158, .8)',
-            data: targetFoodTemperatureData.map(d => {return {x: d.x, y:display.convertToTemperatureUnit(d.y)}}),
-          });
+          if(targetFoodTemperatureData.length > 0){
+            datasets.push({
+              label: 'target food temp',
+              backgroundColor: 'rgba(245, 252, 205, 0.5)',
+              borderColor: 'rgba(0, 0, 0, 0.0)',
+              radius: 0,
+              fill: true,
+              data: targetFoodTemperatureData.map(d => {return {x: d.x, y:display.convertToTemperatureUnit(d.y)}}),
+            });
+          }
 
           return {
             datasets,
@@ -320,6 +357,11 @@
               currentPitTemperatureData.push({x: currentTime, y: d.currentPitTemperature});
               if(currentPitTemperatureData.length > maxDataSize){
                 currentPitTemperatureData = largestTriangleThreeBuckets(currentPitTemperatureData, downsizingTargetSize, 'x', 'x');
+              }
+
+              targetPitTemperatureData.push({x:currentTime, y: d.targetPitTemperature});
+              if(targetPitTemperatureData.length > maxDataSize){
+                targetPitTemperatureData = largestTriangleThreeBuckets(targetPitTemperatureData, downsizingTargetSize, 'x', 'x');
               }
             }
 
@@ -343,14 +385,12 @@
                 probe3TemperatureData = largestTriangleThreeBuckets(probe3TemperatureData, downsizingTargetSize, 'x', 'x');
               }
             }
-            targetPitTemperatureData.push({x:currentTime, y: d.targetPitTemperature});
-            if(targetPitTemperatureData.length > maxDataSize){
-              targetPitTemperatureData = largestTriangleThreeBuckets(targetPitTemperatureData, downsizingTargetSize, 'x', 'x');
-            }
 
-            targetFoodTemperatureData.push({x:currentTime, y: config.getTargetFoodTemperature()});
-            if(targetFoodTemperatureData.length > maxDataSize){
-              targetFoodTemperatureData = largestTriangleThreeBuckets(targetFoodTemperatureData, downsizingTargetSize, 'x', 'x');
+            if(d.probe1Temperature != 400 || d.probe2Temperature != 400 || d.probe3Temperature != 400){
+              targetFoodTemperatureData.push({x:currentTime, y: config.getTargetFoodTemperature()});
+              if(targetFoodTemperatureData.length > maxDataSize){
+                targetFoodTemperatureData = largestTriangleThreeBuckets(targetFoodTemperatureData, downsizingTargetSize, 'x', 'x');
+              }
             }
 
             saveData();
@@ -365,72 +405,15 @@
             saveData();
           },
           refresh: function(){
-            if( targetPitTemperatureData.length > 0 ){
-              pitTemperatureChart.data = getPitTemperatureData();
-              pitTemperatureChart.update();
-              $("#pitTemperatureChart").show();
+            var temperatureData = getTemperatureData();
+            if( temperatureData.datasets.length > 0 ){
+              temperatureChart.data = temperatureData;
+              temperatureChart.update();
+              $("#temperatureChart").show();
             } else {
-              $("#pitTemperatureChart").hide();
-            }
-
-            if( probe1TemperatureData.length > 0 || probe2TemperatureData.length > 0 || probe3TemperatureData.length > 0 ) {
-              foodTemperatureChart.data = getFoodTemperatureData();
-              foodTemperatureChart.update();
-              $("#foodTemperatureChart").show();
-            } else {
-              $("#foodTemperatureChart").hide();
+              $("#temperatureChart").hide();
             }
           },
-          draw: function(){
-            const pitTemperatureChartElement = document.getElementById("pitTemperatureChart").getContext('2d');
-            pitTemperatureChart = new Chart(pitTemperatureChartElement, {
-              type: 'line',
-              data: getPitTemperatureData(),
-              options: {
-                responsive: true,
-                animation: false,
-                legend: {
-                  position: "bottom",
-                },
-                scales: {
-                  x: {
-                    type: 'time',
-                    position: 'bottom',
-                    time: {
-                      minUnit: 'second'
-                    },
-                  },
-                  y: {
-                    min: 0,
-                  },
-                }
-              },
-            });
-            const foodTemperatureChartElement = document.getElementById("foodTemperatureChart").getContext('2d');
-            foodTemperatureChart = new Chart(foodTemperatureChartElement, {
-              type: 'line',
-              data: getFoodTemperatureData(),
-              options: {
-                responsive: true,
-                animation: false,
-                legend: {
-                  position: "bottom",
-                },
-                scales: {
-                  x: {
-                    type: 'time',
-                    position: 'bottom',
-                    time: {
-                      minUnit: 'second'
-                    },
-                  },
-                  y: {
-                    min: 0,
-                  },
-                }
-              },
-            });
-          }
         }
       })();
     </script>
@@ -679,7 +662,6 @@
           chart.refresh();
         });
 
-        chart.draw();
         display.refresh();
         scheduler.start();
       });

@@ -40,8 +40,6 @@ pm2 logs ikamand
 # Usage
 
 * Access the web app on the server at `http://<serverip>:3000`
-* The first chart displays the current/target pit temperature
-* The second chart displays the current/target food temperature (chart will be hidden if probe data is not available)
 * Click the `status` to turn on/off
 * Click the `target pit temp` to adjust it
 * Click the `target food temp` to adjust it
