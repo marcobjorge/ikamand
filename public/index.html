@@ -59,14 +59,14 @@
           </div>
           <div class="d-flex flex-row text-nowrap justify-content-center"><p>fan speed</p></div>
         </div>
-        <div class="col">
+        <div class="col" style="display:none;" id="displayCurrentPitTemperatureGroup">
           <div class="d-flex flex-row justify-content-center">
             <div class="d-flex d-inline-flex align-items-end p-0"><h1 id="displayCurrentPitTemperature" class="display-1" style="display:inline;">-</h1></div>
             <div class="d-flex d-inline-flex align-items-end p-0"><p class="display-temperature-unit"></p></div>
           </div>
           <div class="d-flex flex-row text-nowrap justify-content-center"><p>current pit temp</p></div>
         </div>
-        <div class="col" data-bs-toggle="modal" data-bs-target="#targetPitTemperatureModal">
+        <div class="col" style="display:none;" data-bs-toggle="modal" data-bs-target="#targetPitTemperatureModal" id="displayTargetPitTemperatureGroup">
           <a class="nav-link disabled ikamand-action" href="#">
             <div class="d-flex flex-row justify-content-center">
               <div class="d-flex d-inline-flex align-items-end p-0"><h1 id="displayTargetPitTemperature" class="display-1" style="display:inline;">-</h1></div>
@@ -450,6 +450,13 @@
                 return true;
               }
             };
+
+            var currentPitTemperatureHasData = updateProbeVisibility("#displayCurrentPitTemperatureGroup", d.currentPitTemperature);
+            if( currentPitTemperatureHasData ){
+              $('#displayTargetPitTemperatureGroup').show();
+            } else {
+              $('#displayTargetPitTemperatureGroup').hide();
+            }
 
             var probe1TemperatureHasData = updateProbeVisibility("#displayProbe1Group", d.probe1Temperature);
             var probe2TemperatureHasData = updateProbeVisibility("#displayProbe2Group", d.probe2Temperature);
