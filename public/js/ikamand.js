@@ -33,10 +33,10 @@ const ikamand = (function(){
       cm: input['cm'],
       ag: input['ag'],
       as: input['as'],
-      currentPitTemperature: input['pt'],
-      probe1Temperature: input['t1'],
-      probe2Temperature: input['t2'],
-      probe3Temperature: input['t3'],
+      currentPitTemperature: (input['pt'] > 0 ? input['pt'] : 400),
+      probe1Temperature: (input['t1'] > 0 ? input['t1'] : 400),
+      probe2Temperature: (input['t2'] > 0 ? input['t2'] : 400),
+      probe3Temperature: (input['t3'] > 0 ? input['t3'] : 400),
       fanSpeed: input['dc'],
       targetPitTemperature: input['tpt'],
     };
@@ -46,10 +46,15 @@ const ikamand = (function(){
   const fetchAndDecodeData = function (url, options){
     return fetchData(url, options).then(response => {
        // console.log(response);
-       const obj = decodeData(response);
-       return obj;
+       if( response != undefined ){
+         const obj = decodeData(response);
+         return obj;
+       }
     });
   }
+
+  var errorCount = 0;
+  var lastErrorTimestamp = undefined;
 
   const fetchData = function(url, options) {
     const refreshPeriod = config.getRefreshPeriod();
@@ -67,10 +72,19 @@ const ikamand = (function(){
       }
       return response.text();
     }).then((response) => {
+      errorCount = 0;
+      lastErrorTimestamp = undefined;
       return response;
     }).catch((error) => {
-      console.log(error);
-      return null;
+      const currentTime = new Date().getTime();
+      if( lastErrorTimestamp == undefined || lastErrorTimestamp + 2000 < currentTime){
+        errorCount++;
+        lastErrorTimestamp = currentTime;
+        console.log(`Failed to connect to ikamand - ${error}`);
+      } else {
+        console.log(`Failed to connect to ikamand but refuse to count as error - ${error}`);
+      }
+      return undefined;
     });
   }
 
@@ -127,6 +141,9 @@ const ikamand = (function(){
     },
     lastData: function(){
       return lastData;
+    },
+    isOnline(){
+      return errorCount < 3;
     },
   };
 })();

@@ -45,7 +45,7 @@
     <div class="container">
       <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 gx-5">
         <div class="col" id="configStatus">
-          <a class="nav-link active" href="#">
+          <a class="nav-link disabled ikamand-action" href="#">
             <div class="d-flex flex-row justify-content-center">
               <div class="d-flex d-inline-flex align-items-end p-0"><h1 id="displayStatus" class="display-1" style="display:inline;">-</h1></div>
             </div>
@@ -67,7 +67,7 @@
           <div class="d-flex flex-row text-nowrap justify-content-center"><p>current pit temp</p></div>
         </div>
         <div class="col" data-bs-toggle="modal" data-bs-target="#targetPitTemperatureModal">
-          <a class="nav-link active" href="#">
+          <a class="nav-link disabled ikamand-action" href="#">
             <div class="d-flex flex-row justify-content-center">
               <div class="d-flex d-inline-flex align-items-end p-0"><h1 id="displayTargetPitTemperature" class="display-1" style="display:inline;">-</h1></div>
               <div class="d-flex d-inline-flex align-items-end p-0"><p class="display-temperature-unit"></p></div>
@@ -97,7 +97,7 @@
           <div class="d-flex flex-row text-nowrap justify-content-center"><p>probe 3 temp</p></div>
         </div>
         <div class="col" style="display:none;" data-bs-toggle="modal" data-bs-target="#targetFoodTemperatureModal" id="displayTargetFoodTemperatureGroup">
-          <a class="nav-link active" href="#">
+          <a class="nav-link disabled ikamand-action" href="#">
             <div class="d-flex flex-row justify-content-center">
               <div class="d-flex d-inline-flex align-items-end p-0"><h1 id="displayTargetFoodTemperature" class="display-1" style="display:inline;">-</h1></div>
               <div class="d-flex d-inline-flex align-items-end p-0"><p class="display-temperature-unit"></p></div>
@@ -145,7 +145,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Dismiss</button>
-        <button id="targetFoodTemperatureSave" type="button" class="btn btn-primary">Save</button>
+        <button id="targetFoodTemperatureSave" type="button" class="ikamand-action btn btn-primary">Save</button>
       </div>
     </div>
   </div>
@@ -183,7 +183,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Dismiss</button>
-        <button id="targetPitTemperatureSave" type="button" class="btn btn-primary">Save</button>
+        <button id="targetPitTemperatureSave" type="button" class="ikamand-action btn btn-primary">Save</button>
       </div>
     </div>
   </div>
@@ -404,7 +404,7 @@
             targetFoodTemperatureData = [];
             saveData();
           },
-          refresh: function(){
+          update: function(){
             var temperatureData = getTemperatureData();
             if( temperatureData.datasets.length > 0 ){
               temperatureChart.data = temperatureData;
@@ -422,9 +422,17 @@
       * Utilities to manage the information displayed.
       */
       const display = (function(){
-
-        const refresh = function(){
+        const updateIkamand = function(){
           ikamand.getData().then(d => {
+            if( d == undefined ){
+              if( !ikamand.isOnline() ){
+                $("#displayStatus").html("-");
+                $(".ikamand-action").removeClass("active").addClass("disabled");
+              }
+              return;
+            }
+
+            $(".ikamand-action").removeClass("disabled").addClass("active");
             $("#displayStatus").html(d.active == 0 ? "off" : "on");
             $("#displayTargetPitTemperature").html(convertToTemperatureUnit(d.targetPitTemperature));
             $("#displayCurrentPitTemperature").html(d.currentPitTemperature == 400 ? "-" : convertToTemperatureUnit(d.currentPitTemperature));
@@ -454,7 +462,7 @@
             }
 
             chart.pushData(d);
-            chart.refresh();
+            chart.update();
           });
         };
 
@@ -470,24 +478,11 @@
         }
 
         return {
-          refresh,
-          forcedRefresh: function(){
-            const retry = function(iteration, totalIterations, period){
-              refresh();
-              var progress = Math.round(iteration/totalIterations * 100);
-
-              $("#progressBar").css("width", progress + "%");
-
-              if(iteration < totalIterations){
-                setTimeout(function(){retry(iteration + 1, totalIterations, period);}, period);
-              } else {
-                setTimeout(function(){$("#progress").fadeOut();}, period);
-              }
+          updateIkamand,
+          updateIkamandLoop: function(){
+            for(var i=100;i<=1000; i+=100){
+              setTimeout(updateIkamand, i);
             }
-
-            $("#progressBar").css("width", "0%");
-            $("#progress").fadeIn();
-            retry(1, 10, 100);
           },
           updateTargetFoodTemperature: function(targetFoodTemperature){
             if( targetFoodTemperature == undefined ){
@@ -535,6 +530,11 @@
             $("#refreshPeriodRange").val(refreshPeriod);
             $("#refreshPeriodVal").html(refreshPeriod);
           },
+          animateProgressBar: function(){
+            $("#progressBar").css("width", "0%");
+            $("#progress").fadeIn();
+            $("#progressBar").animate({"width": "100%"}, 1000, 'swing', function(){ setTimeout(function(){$("#progress").fadeOut();}, 500);});
+          },
         }
       })();
     </script>
@@ -547,7 +547,7 @@
             if( intervalId != undefined ){
               clearInterval(intervalId);
             }
-            intervalId = setInterval(function(){display.refresh();}, config.getRefreshPeriod() * 1000);
+            intervalId = setInterval(function(){display.updateIkamand();}, config.getRefreshPeriod() * 1000);
           },
         };
       })();
@@ -556,63 +556,74 @@
       * Start the controller.
       */
       $(window).load(function(){
-        display.updateTargetFoodTemperature();
-        display.updateTargetPitTemperature();
-        display.updateTemperatureUnit();
-        display.updateRefreshPeriod();
-        display.updateTemperatureUnit();
-
-        const setTargetPitTemperature = function(targetPitTemperature){
-          config.setTargetPitTemperature(targetPitTemperature);
-          display.updateTargetPitTemperature(targetPitTemperature);
-        };
-
-        const setTargetFoodTemperature = function(targetFoodTemperature){
-          config.setTargetFoodTemperature(targetFoodTemperature);
-          display.updateTargetFoodTemperature(targetFoodTemperature);
-        };
-
-        $("#configSave").click(function(){
-          config.setRefreshPeriod($("#refreshPeriodRange").val());
-          config.setTemperatureUnit($("#configTemperatureUnitCelsius").is(":checked") ? config.temperatureUnit.celsius : ($("#configTemperatureUnitFahrenheit").is(":checked") ? config.temperatureUnit.fahrenheit : config.temperatureUnit.celsius  ));
-
+        const updateAll = function(){
           display.updateTargetFoodTemperature();
           display.updateTargetPitTemperature();
           display.updateTemperatureUnit();
           display.updateRefreshPeriod();
           display.updateTemperatureUnit();
+          display.updateIkamand();
+        }
 
-          display.refresh();
+        $("#configSave").click(function(){
+          config.setRefreshPeriod($("#refreshPeriodRange").val());
+          config.setTemperatureUnit($("#configTemperatureUnitCelsius").is(":checked") ? config.temperatureUnit.celsius : ($("#configTemperatureUnitFahrenheit").is(":checked") ? config.temperatureUnit.fahrenheit : config.temperatureUnit.celsius  ));
+
+          updateAll();
           $("#configModal").modal('hide');
           scheduler.start();
         });
 
         $("#targetFoodTemperatureSave").click(function(){
-          targetFoodTemperature = display.convertFromTemperatureUnit($("#configTargetFoodTemperatureRange").val());
-          setTargetFoodTemperature(targetFoodTemperature);
-          $("#targetFoodTemperatureModal").modal('hide');
+          if( ikamand.isOnline() ){
+            targetFoodTemperature = display.convertFromTemperatureUnit($("#configTargetFoodTemperatureRange").val());
+            config.setTargetFoodTemperature(targetFoodTemperature);
+            display.updateTargetFoodTemperature(targetFoodTemperature);
+
+            $("#targetFoodTemperatureModal").modal('hide');
+            display.animateProgressBar();
+          } else {
+            console.log("ikamand is offline");
+          }
         });
 
         $("#targetPitTemperatureSave").click(function(){
-          targetPitTemperature = display.convertFromTemperatureUnit($("#configTargetPitTemperatureRange").val());
-          setTargetPitTemperature(targetPitTemperature);
-          ikamand.start(targetPitTemperature, config.getTargetFoodTemperature());
-          display.forcedRefresh();
-          $("#targetPitTemperatureModal").modal('hide');
+          if( ikamand.isOnline() ){
+            targetPitTemperature = display.convertFromTemperatureUnit($("#configTargetPitTemperatureRange").val());
+            config.setTargetPitTemperature(targetPitTemperature);
+
+            ikamand.start(targetPitTemperature, config.getTargetFoodTemperature());
+
+            display.updateIkamandLoop();
+            $("#targetPitTemperatureModal").modal('hide');
+            display.animateProgressBar();
+          } else {
+            console.log("ikamand is offline");
+          }
         });
 
         $("#configStatus").click(function(){
-          var lastData = ikamand.lastData();
-          if( lastData != undefined ){
-            ikamand.lastData().then(d=>{
-              if(d.active == 0 && d.targetPitTemperature == 0 ){
-                $("#targetPitTemperatureModal").modal("show");
-              } else {
-                d.active==0 ? ikamand.start(d.targetPitTemperature, config.getTargetFoodTemperature()) : ikamand.stop();
-                display.forcedRefresh();
-              }
-            });
+          if( ikamand.isOnline() ){
+            var lastData = ikamand.lastData();
+            if( lastData != undefined ){
+              ikamand.lastData().then(d=>{
+                if(d.active == 0 && d.targetPitTemperature == 0 ){
+                  $("#targetPitTemperatureModal").modal("show");
+                } else {
+                  d.active==0 ? ikamand.start(d.targetPitTemperature, config.getTargetFoodTemperature()) : ikamand.stop();
+                  display.updateIkamandLoop();
+                  display.animateProgressBar();
+                }
+              });
+            }
+          } else {
+            console.log("ikamand is offline");
           }
+        });
+
+        $("#clearHistory").click(function(){
+          chart.clearHistoricalData();
+          chart.update();
         });
 
         const temperaturePreset = {
@@ -657,12 +668,7 @@
           loadTargetFoodTemperature(temperaturePreset.pizza.targetFoodTemperature);
         });
 
-        $("#clearHistory").click(function(){
-          chart.clearHistoricalData();
-          chart.refresh();
-        });
-
-        display.refresh();
+        updateAll();
         scheduler.start();
       });
     </script>
