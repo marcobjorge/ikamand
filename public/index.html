@@ -423,7 +423,7 @@
       */
       const display = (function(){
         const updateIkamand = function(){
-          ikamand.getData().then(d => {
+          ikamand.getData(config.getRefreshPeriod()*1000).then(d => {
             if( d == undefined ){
               if( !ikamand.isOnline() ){
                 $("#displayStatus").html("-");
@@ -480,8 +480,8 @@
         return {
           updateIkamand,
           updateIkamandLoop: function(){
-            for(var i=100;i<=1000; i+=100){
-              setTimeout(updateIkamand, i);
+            for(var i=1;i<=5; i++){
+              setTimeout(updateIkamand, i*200);
             }
           },
           updateTargetFoodTemperature: function(targetFoodTemperature){

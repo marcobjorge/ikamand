@@ -43,8 +43,8 @@ const ikamand = (function(){
     return output;
   }
 
-  const fetchAndDecodeData = function (url, options){
-    return fetchData(url, options).then(response => {
+  const fetchAndDecodeData = function (url, options, timeout){
+    return fetchData(url, options, timeout).then(response => {
        // console.log(response);
        if( response != undefined ){
          const obj = decodeData(response);
@@ -54,12 +54,13 @@ const ikamand = (function(){
   }
 
   var errorCount = 0;
-  var lastErrorTimestamp = undefined;
 
-  const fetchData = function(url, options) {
-    const refreshPeriod = config.getRefreshPeriod();
+  const fetchData = function(url, options, timeout) {
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), refreshPeriod * 1000 );
+
+    if( timeout != undefined ){
+      setTimeout(() => controller.abort(), timeout);
+    }
 
     options = {
       ...options,
@@ -73,17 +74,10 @@ const ikamand = (function(){
       return response.text();
     }).then((response) => {
       errorCount = 0;
-      lastErrorTimestamp = undefined;
       return response;
     }).catch((error) => {
-      const currentTime = new Date().getTime();
-      if( lastErrorTimestamp == undefined || lastErrorTimestamp + 2000 < currentTime){
-        errorCount++;
-        lastErrorTimestamp = currentTime;
-        console.log(`Failed to connect to ikamand - ${error}`);
-      } else {
-        console.log(`Failed to connect to ikamand but refuse to count as error - ${error}`);
-      }
+      errorCount++;
+      console.log(`Failed to connect to ikamand - ${error}`);
       return undefined;
     });
   }
@@ -93,8 +87,8 @@ const ikamand = (function(){
   }
 
   return {
-    getData: function(){
-      lastData = fetchAndDecodeData(getFullUrl("data"));
+    getData: function(timeout){
+      lastData = fetchAndDecodeData(getFullUrl("data"), {}, timeout);
       return lastData;
     },
     stop: function(){
