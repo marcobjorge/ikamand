@@ -76,6 +76,111 @@ const config = (function(){
     getTemperatureUnit: function(){
       return get()["temperatureUnit"] ?? temperatureUnit.celsius;
     },
+
+    //
+    // visibility
+    //
+    setShowFanSpeed: function(showFanSpeed){
+      if( showFanSpeed == undefined ){
+        return;
+      }
+      var c = get();
+      c["showFanSpeed"] = showFanSpeed;
+      set(c);
+    },
+    getShowFanSpeed: function(){
+      return get()["showFanSpeed"] ?? true;
+    },
+
+    //
+    // visibility
+    //
+    setShowTargetPitTemperature: function(showTargetPitTemperature){
+      if( showTargetPitTemperature == undefined ){
+        return;
+      }
+      var c = get();
+      c["showTargetPitTemperature"] = showTargetPitTemperature;
+      set(c);
+    },
+    getShowTargetPitTemperature: function(){
+      return get()["showTargetPitTemperature"] ?? true;
+    },
+
+    //
+    // visibility
+    //
+    setShowTargetFoodTemperature: function(showTargetFoodTemperature){
+      if( showTargetFoodTemperature == undefined ){
+        return;
+      }
+      var c = get();
+      c["showTargetFoodTemperature"] = showTargetFoodTemperature;
+      set(c);
+    },
+    getShowTargetFoodTemperature: function(){
+      return get()["showTargetFoodTemperature"] ?? true;
+    },
+
+    //
+    // visibility
+    //
+    setShowProbe1Temperature: function(showProbe1Temperature){
+      if( showProbe1Temperature == undefined ){
+        return;
+      }
+      var c = get();
+      c["showProbe1Temperature"] = showProbe1Temperature;
+      set(c);
+    },
+    getShowProbe1Temperature: function(){
+      return get()["showProbe1Temperature"] ?? true;
+    },
+
+    //
+    // visibility
+    //
+    setShowProbe2Temperature: function(showProbe2Temperature){
+      if( showProbe2Temperature == undefined ){
+        return;
+      }
+      var c = get();
+      c["showProbe2Temperature"] = showProbe2Temperature;
+      set(c);
+    },
+    getShowProbe2Temperature: function(){
+      return get()["showProbe2Temperature"] ?? true;
+    },
+
+    //
+    // visibility
+    //
+    setShowProbe3Temperature: function(showProbe3Temperature){
+      if( showProbe3Temperature == undefined ){
+        return;
+      }
+      var c = get();
+      c["showProbe3Temperature"] = showProbe3Temperature;
+      set(c);
+    },
+    getShowProbe3Temperature: function(){
+      return get()["showProbe3Temperature"] ?? true;
+    },
+
+    //
+    // visibility
+    //
+    setShowCurrentPitTemperature: function(showCurrentPitTemperature){
+      if( showCurrentPitTemperature == undefined ){
+        return;
+      }
+      var c = get();
+      c["showCurrentPitTemperature"] = showCurrentPitTemperature;
+      set(c);
+    },
+    getShowCurrentPitTemperature: function(){
+      return get()["showCurrentPitTemperature"] ?? true;
+    },
   }
 })();
 

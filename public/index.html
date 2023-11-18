@@ -52,7 +52,7 @@
             <div class="d-flex flex-row text-nowrap justify-content-center"><p>status</p></div>
           </a>
         </div>
-        <div class="col">
+        <div class="col" style="display:none;" id="displayFanSpeedGroup">
           <div class="d-flex flex-row justify-content-center">
             <div class="d-flex d-inline-flex align-items-end p-0"><h1 id="displayFanSpeed" class="display-1" style="display:inline;">-</h1></div>
             <div class="d-flex d-inline-flex align-items-end p-0"><p>%</p></div>
@@ -75,21 +75,21 @@
             <div class="d-flex flex-row text-nowrap justify-content-center"><p>target pit temp</p></div>
           </a>
         </div>
-        <div class="col" style="display:none;" id="displayProbe1Group">
+        <div class="col" style="display:none;" id="displayProbe1TemperatureGroup">
           <div class="d-flex flex-row justify-content-center">
             <div class="d-flex d-inline-flex align-items-end p-0"><h1 id="displayProbe1Temperature" class="display-1" style="display:inline;">-</h1></div>
             <div class="d-flex d-inline-flex align-items-end p-0"><p class="display-temperature-unit"></p></div>
           </div>
           <div class="d-flex flex-row text-nowrap justify-content-center"><p>probe 1 temp</p></div>
         </div>
-        <div class="col" style="display:none;" id="displayProbe2Group">
+        <div class="col" style="display:none;" id="displayProbe2TemperatureGroup">
           <div class="d-flex flex-row justify-content-center">
             <div class="d-flex d-inline-flex align-items-end p-0"><h1 id="displayProbe2Temperature" class="display-1" style="display:inline;">-</h1></div>
             <div class="d-flex d-inline-flex align-items-end p-0"><p class="display-temperature-unit"></p></div>
           </div>
           <div class="d-flex flex-row text-nowrap justify-content-center"><p>probe 2 temp</p></div>
         </div>
-        <div class="col" style="display:none;" id="displayProbe3Group">
+        <div class="col" style="display:none;" id="displayProbe3TemperatureGroup">
           <div class="d-flex flex-row justify-content-center">
             <div class="d-flex d-inline-flex align-items-end p-0"><h1 id="displayProbe3Temperature" class="display-1" style="display:inline;">-</h1></div>
             <div class="d-flex d-inline-flex align-items-end p-0"><p class="display-temperature-unit"></p></div>
@@ -190,7 +190,7 @@
 </div>
 
 <div class="modal fade" id="configModal" role="dialog" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-sm">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">Configure</h5>
@@ -206,7 +206,7 @@
               <div class="col"><input type="range" min="2" max="60" step="1" class="form-range" id="refreshPeriodRange" onInput="$('#refreshPeriodVal').html($('#refreshPeriodRange').val())"></div>
             </div>
           </div>
-          <div class="row">
+          <div class="row mb-3">
             <div class="col-md">
               <div class="col text-nowrap"><label class="form-label">Temperature Unit</label></div>
               <div class="form-check">
@@ -220,6 +220,53 @@
                   <label class="form-check-label" for="configTemperatureUnitFahrenheit">
                     Fahrenheit
                   </label>
+              </div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-md">
+              <div class="col text-nowrap"><label class="form-label">Visibility</label></div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="showFanSpeed">
+                <label class="form-check-label" for="flexCheckDefault">
+                  Fan Speed
+                </label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="showCurrentPitTemperature">
+                <label class="form-check-label" for="flexCheckDefault">
+                  Current Pit Temperature
+                </label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="showTargetPitTemperature">
+                <label class="form-check-label" for="flexCheckDefault">
+                  Target Pit Temperature
+                </label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="showProbe1Temperature">
+                <label class="form-check-label" for="flexCheckDefault">
+                  Probe 1 Temperature
+                </label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="showProbe2Temperature">
+                <label class="form-check-label" for="flexCheckDefault">
+                  Probe 2 Temperature
+                </label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="showProbe3Temperature">
+                <label class="form-check-label" for="flexCheckDefault">
+                  Probe 3 Temperature
+                </label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="showTargetFoodTemperature">
+                <label class="form-check-label" for="flexCheckDefault">
+                  Target Food Temperature
+                </label>
               </div>
             </div>
           </div>
@@ -277,7 +324,7 @@
         const getTemperatureData = function(){
           var datasets=[];
 
-          if(currentPitTemperatureData.length > 0){
+          if(config.getShowCurrentPitTemperature() && currentPitTemperatureData.length > 0){
             datasets.push({
               label: 'current pit temp',
               backgroundColor: 'rgba(134, 10, 53, 0.5)',
@@ -288,7 +335,7 @@
               data: currentPitTemperatureData.map(d => {return {x: d.x, y:display.convertToTemperatureUnit(d.y)}}),
             });
           }
-          if(targetPitTemperatureData.length > 0){
+          if(config.getShowTargetPitTemperature() && targetPitTemperatureData.length > 0){
             datasets.push({
               label: 'target pit temp',
               backgroundColor: 'rgba(134, 10, 53, 0.1)',
@@ -298,7 +345,7 @@
               data: targetPitTemperatureData.map(d => {return {x: d.x, y:display.convertToTemperatureUnit(d.y)}}),
             });
           }
-          if(probe1TemperatureData.length > 0){
+          if(config.getShowProbe1Temperature() && probe1TemperatureData.length > 0){
             datasets.push({
               label: 'probe 1 temp',
               backgroundColor: 'rgba(18, 72, 107, 0.8)',
@@ -309,7 +356,7 @@
               data: probe1TemperatureData.map(d => {return {x: d.x, y:display.convertToTemperatureUnit(d.y)}}),
             });
           }
-          if(probe2TemperatureData.length > 0){
+          if(config.getShowProbe2Temperature() && probe2TemperatureData.length > 0){
             datasets.push({
               label: 'probe 2 temp',
               backgroundColor: 'rgba(65, 145, 151, 0.8)',
@@ -320,7 +367,7 @@
               data: probe2TemperatureData.map(d => {return {x: d.x, y:display.convertToTemperatureUnit(d.y)}}),
             });
           }
-          if(probe3TemperatureData.length > 0){
+          if(config.getShowProbe3Temperature() && probe3TemperatureData.length > 0){
             datasets.push({
               label: 'probe 3 temp',
               backgroundColor: 'rgba(120, 214, 198, 0.8)',
@@ -331,7 +378,7 @@
               data: probe3TemperatureData.map(d => {return {x: d.x, y:display.convertToTemperatureUnit(d.y)}}),
             });
           }
-          if(targetFoodTemperatureData.length > 0){
+          if(config.getShowTargetFoodTemperature() && targetFoodTemperatureData.length > 0){
             datasets.push({
               label: 'target food temp',
               backgroundColor: 'rgba(245, 252, 205, 0.5)',
@@ -441,32 +488,13 @@
             $("#displayProbe3Temperature").html(d.probe3Temperature == 400 ? "-" : convertToTemperatureUnit(d.probe3Temperature));
             $("#displayFanSpeed").html(d.fanSpeed);
 
-            var updateProbeVisibility = function(id, temperature){
-              if( temperature == 400 ){
-                $(id).hide();
-                return false;
-              } else {
-                $(id).show();
-                return true;
-              }
-            };
-
-            var currentPitTemperatureHasData = updateProbeVisibility("#displayCurrentPitTemperatureGroup", d.currentPitTemperature);
-            if( currentPitTemperatureHasData ){
-              $('#displayTargetPitTemperatureGroup').show();
-            } else {
-              $('#displayTargetPitTemperatureGroup').hide();
-            }
-
-            var probe1TemperatureHasData = updateProbeVisibility("#displayProbe1Group", d.probe1Temperature);
-            var probe2TemperatureHasData = updateProbeVisibility("#displayProbe2Group", d.probe2Temperature);
-            var probe3TemperatureHasData = updateProbeVisibility("#displayProbe3Group", d.probe3Temperature);
-
-            if( probe1TemperatureHasData || probe2TemperatureHasData || probe3TemperatureHasData){
-              $('#displayTargetFoodTemperatureGroup').show();
-            } else {
-              $('#displayTargetFoodTemperatureGroup').hide();
-            }
+            $("#displayFanSpeedGroup").toggle(config.getShowFanSpeed());
+            $("#displayCurrentPitTemperatureGroup").toggle(config.getShowCurrentPitTemperature() && d.currentPitTemperature != 400);
+            $("#displayTargetPitTemperatureGroup").toggle(config.getShowTargetPitTemperature() && d.currentPitTemperature != 400);
+            $("#displayProbe1TemperatureGroup").toggle(config.getShowProbe1Temperature() && d.probe1Temperature != 400);
+            $("#displayProbe2TemperatureGroup").toggle(config.getShowProbe2Temperature() && d.probe2Temperature != 400);
+            $("#displayProbe3TemperatureGroup").toggle(config.getShowProbe3Temperature() && d.probe3Temperature != 400);
+            $("#displayTargetFoodTemperatureGroup").toggle(config.getShowTargetFoodTemperature() && (d.probe1Temperature != 400 || d.probe2Temperature != 400 || d.probe3Temperature != 400));
 
             chart.pushData(d);
             chart.update();
@@ -542,6 +570,15 @@
             $("#progress").fadeIn();
             $("#progressBar").animate({"width": "100%"}, 1000, 'swing', function(){ setTimeout(function(){$("#progress").fadeOut();}, 500);});
           },
+          updateVisibilityConfig: function(){
+            $("#showFanSpeed").prop("checked", config.getShowFanSpeed());
+            $("#showCurrentPitTemperature").prop("checked", config.getShowCurrentPitTemperature());
+            $("#showTargetPitTemperature").prop("checked", config.getShowTargetPitTemperature());
+            $("#showProbe1Temperature").prop("checked", config.getShowProbe1Temperature());
+            $("#showProbe2Temperature").prop("checked", config.getShowProbe2Temperature());
+            $("#showProbe3Temperature").prop("checked", config.getShowProbe3Temperature());
+            $("#showTargetFoodTemperature").prop("checked", config.getShowTargetFoodTemperature());
+          },
         }
       })();
     </script>
@@ -570,11 +607,19 @@
           display.updateRefreshPeriod();
           display.updateTemperatureUnit();
           display.updateIkamand();
+          display.updateVisibilityConfig();
         }
 
         $("#configSave").click(function(){
           config.setRefreshPeriod($("#refreshPeriodRange").val());
           config.setTemperatureUnit($("#configTemperatureUnitCelsius").is(":checked") ? config.temperatureUnit.celsius : ($("#configTemperatureUnitFahrenheit").is(":checked") ? config.temperatureUnit.fahrenheit : config.temperatureUnit.celsius  ));
+          config.setShowFanSpeed($("#showFanSpeed").prop("checked"));
+          config.setShowCurrentPitTemperature($("#showCurrentPitTemperature").prop("checked"));
+          config.setShowTargetPitTemperature($("#showTargetPitTemperature").prop("checked"));
+          config.setShowProbe1Temperature($("#showProbe1Temperature").prop("checked"));
+          config.setShowProbe2Temperature($("#showProbe2Temperature").prop("checked"));
+          config.setShowProbe3Temperature($("#showProbe3Temperature").prop("checked"));
+          config.setShowTargetFoodTemperature($("#showTargetFoodTemperature").prop("checked"));
 
           updateAll();
           $("#configModal").modal('hide');
