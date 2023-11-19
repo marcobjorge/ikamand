@@ -469,39 +469,32 @@
       * Utilities to manage the information displayed.
       */
       const display = (function(){
-        const updateIkamand = function(){
-          ikamand.getData(config.getRefreshPeriod()*1000).then(d => {
-            if( d == undefined ){
-              if( !ikamand.isOnline() ){
-                $("#displayStatus").html("-");
-                $(".ikamand-action").removeClass("active").addClass("disabled");
-              }
-              return;
-            }
+        const updateIkamand = function(d){
+          if(d == undefined){
+            return;
+          }
 
-            $(".ikamand-action").removeClass("disabled").addClass("active");
-            $("#displayStatus").html(d.active == 0 ? "off" : "on");
-            $("#displayTargetPitTemperature").html(convertToTemperatureUnit(d.targetPitTemperature));
-            $("#displayCurrentPitTemperature").html(d.currentPitTemperature == 400 ? "-" : convertToTemperatureUnit(d.currentPitTemperature));
-            $("#displayProbe1Temperature").html(d.probe1Temperature == 400 ? "-" : convertToTemperatureUnit(d.probe1Temperature));
-            $("#displayProbe2Temperature").html(d.probe2Temperature == 400 ? "-" : convertToTemperatureUnit(d.probe2Temperature));
-            $("#displayProbe3Temperature").html(d.probe3Temperature == 400 ? "-" : convertToTemperatureUnit(d.probe3Temperature));
-            $("#displayFanSpeed").html(d.fanSpeed);
+          $(".ikamand-action").removeClass("disabled").addClass("active");
+          $("#displayStatus").html(ikamand.isOnline() ? (d.active == 0 ? "off" : "on") : "-");
+          $("#displayTargetPitTemperature").html(convertToTemperatureUnit(d.targetPitTemperature));
+          $("#displayCurrentPitTemperature").html(d.currentPitTemperature == 400 ? "-" : convertToTemperatureUnit(d.currentPitTemperature));
+          $("#displayProbe1Temperature").html(d.probe1Temperature == 400 ? "-" : convertToTemperatureUnit(d.probe1Temperature));
+          $("#displayProbe2Temperature").html(d.probe2Temperature == 400 ? "-" : convertToTemperatureUnit(d.probe2Temperature));
+          $("#displayProbe3Temperature").html(d.probe3Temperature == 400 ? "-" : convertToTemperatureUnit(d.probe3Temperature));
+          $("#displayFanSpeed").html(d.fanSpeed);
 
-            $("#displayFanSpeedGroup").toggle(config.getShowFanSpeed());
-            $("#displayCurrentPitTemperatureGroup").toggle(config.getShowCurrentPitTemperature() && d.currentPitTemperature != 400);
-            $("#displayTargetPitTemperatureGroup").toggle(config.getShowTargetPitTemperature() && d.currentPitTemperature != 400);
-            $("#displayProbe1TemperatureGroup").toggle(config.getShowProbe1Temperature() && d.probe1Temperature != 400);
-            $("#displayProbe2TemperatureGroup").toggle(config.getShowProbe2Temperature() && d.probe2Temperature != 400);
-            $("#displayProbe3TemperatureGroup").toggle(config.getShowProbe3Temperature() && d.probe3Temperature != 400);
-            $("#displayTargetFoodTemperatureGroup").toggle(config.getShowTargetFoodTemperature() && (d.probe1Temperature != 400 || d.probe2Temperature != 400 || d.probe3Temperature != 400));
+          $("#displayFanSpeedGroup").toggle(config.getShowFanSpeed());
+          $("#displayCurrentPitTemperatureGroup").toggle(config.getShowCurrentPitTemperature() && d.currentPitTemperature != 400);
+          $("#displayTargetPitTemperatureGroup").toggle(config.getShowTargetPitTemperature() && d.currentPitTemperature != 400);
+          $("#displayProbe1TemperatureGroup").toggle(config.getShowProbe1Temperature() && d.probe1Temperature != 400);
+          $("#displayProbe2TemperatureGroup").toggle(config.getShowProbe2Temperature() && d.probe2Temperature != 400);
+          $("#displayProbe3TemperatureGroup").toggle(config.getShowProbe3Temperature() && d.probe3Temperature != 400);
+          $("#displayTargetFoodTemperatureGroup").toggle(config.getShowTargetFoodTemperature() && (d.probe1Temperature != 400 || d.probe2Temperature != 400 || d.probe3Temperature != 400));
 
-            chart.pushData(d);
-            chart.update();
-          });
+          chart.update();
         };
 
-        var convertToTemperatureUnit = function(temperature){
+        const convertToTemperatureUnit = function(temperature){
           var temperatureUnit = config.getTemperatureUnit();
           if( temperatureUnit == config.temperatureUnit.celsius ){
             return temperature;
@@ -513,12 +506,11 @@
         }
 
         return {
-          updateIkamand,
-          updateIkamandLoop: function(){
-            for(var i=1;i<=5; i++){
-              setTimeout(updateIkamand, i*200);
-            }
+          showOffline: function(){
+            $("#displayStatus").html("-");
+            $(".ikamand-action").removeClass("active").addClass("disabled");
           },
+          updateIkamand,
           updateTargetFoodTemperature: function(targetFoodTemperature){
             if( targetFoodTemperature == undefined ){
                targetFoodTemperature = config.getTargetFoodTemperature();
@@ -586,12 +578,31 @@
       const scheduler = (function(){
         var intervalId;
 
+        const func = function(){
+          ikamand.fetchData(config.getRefreshPeriod()*1000).then(d => {
+            if(d == undefined){
+              if(!ikamand.isOnline()){
+                display.showOffline();
+              }
+              return;
+            }
+            chart.pushData(d);
+            display.updateIkamand(d);
+        })};
+
         return {
+          burst: function(){
+            for(var i=1;i<=5; i++){
+              setTimeout(func, i*200);
+            }
+          },
           start: function(){
             if( intervalId != undefined ){
               clearInterval(intervalId);
             }
-            intervalId = setInterval(function(){display.updateIkamand();}, config.getRefreshPeriod() * 1000);
+
+            func();
+            intervalId = setInterval(func, config.getRefreshPeriod() * 1000);
           },
         };
       })();
@@ -606,8 +617,8 @@
           display.updateTemperatureUnit();
           display.updateRefreshPeriod();
           display.updateTemperatureUnit();
-          display.updateIkamand();
           display.updateVisibilityConfig();
+          display.updateIkamand(ikamand.getLastData());
         }
 
         $("#configSave").click(function(){
@@ -646,7 +657,7 @@
 
             ikamand.start(targetPitTemperature, config.getTargetFoodTemperature());
 
-            display.updateIkamandLoop();
+            scheduler.burst();
             $("#targetPitTemperatureModal").modal('hide');
             display.animateProgressBar();
           } else {
@@ -656,17 +667,15 @@
 
         $("#configStatus").click(function(){
           if( ikamand.isOnline() ){
-            var lastData = ikamand.lastData();
-            if( lastData != undefined ){
-              ikamand.lastData().then(d=>{
-                if(d.active == 0 && d.targetPitTemperature == 0 ){
-                  $("#targetPitTemperatureModal").modal("show");
-                } else {
-                  d.active==0 ? ikamand.start(d.targetPitTemperature, config.getTargetFoodTemperature()) : ikamand.stop();
-                  display.updateIkamandLoop();
-                  display.animateProgressBar();
-                }
-              });
+            var d = ikamand.getLastData();
+            if( d != undefined ){
+              if(d.active == 0 && d.targetPitTemperature == 0 ){
+                $("#targetPitTemperatureModal").modal("show");
+              } else {
+                d.active==0 ? ikamand.start(d.targetPitTemperature, config.getTargetFoodTemperature()) : ikamand.stop();
+                scheduler.burst();
+                display.animateProgressBar();
+              }
             }
           } else {
             console.log("ikamand is offline");
@@ -676,6 +685,7 @@
         $("#clearHistory").click(function(){
           chart.clearHistoricalData();
           chart.update();
+          scheduler.start();
         });
 
         const temperaturePreset = {

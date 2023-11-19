@@ -2,16 +2,16 @@
 * Utilities to manage the configuration.
 */
 const config = (function(){
-  var temperatureUnit = {
+  const temperatureUnit = {
       celsius: 1,
       fahrenheit: 2,
   };
 
-  var get = function(){
+  const get = function(){
     return JSON.parse(localStorage.getItem("config")) || {};
   };
 
-  var set = function(c){
+  const set = function(c){
     localStorage.setItem("config", JSON.stringify(c));
   }
 

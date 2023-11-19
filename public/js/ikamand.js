@@ -2,7 +2,34 @@
 * Utilities to connect to ikamand.
 */
 const ikamand = (function(){
-  var lastData = undefined;
+  var lastData = JSON.parse(sessionStorage.getItem("ikamand.lastData")) || undefined;
+  var errorCount = JSON.parse(sessionStorage.getItem("ikamand.errorCount")) || 0;
+
+  const setLastData = function(c){
+    if(c == undefined){
+      return;
+    }
+
+    lastData = c;
+    sessionStorage.setItem("ikamand.lastData", JSON.stringify(c));
+  };
+
+  const getLastData = function(){
+    return lastData;
+  };
+
+  const setErrorCount = function(c){
+    if(c == undefined){
+      return;
+    }
+
+    errorCount = c;
+    sessionStorage.setItem("ikamand.errorCount", JSON.stringify(c));
+  };
+
+  const getErrorCount = function(){
+    return errorCount;
+  };
 
   const uuidv4 = function () {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
@@ -53,8 +80,6 @@ const ikamand = (function(){
     });
   }
 
-  var errorCount = 0;
-
   const fetchData = function(url, options, timeout) {
     const controller = new AbortController();
 
@@ -73,10 +98,10 @@ const ikamand = (function(){
       }
       return response.text();
     }).then((response) => {
-      errorCount = 0;
+      setErrorCount(0);
       return response;
     }).catch((error) => {
-      errorCount++;
+      setErrorCount(getErrorCount() + 1);
       console.log(`Failed to connect to ikamand - ${error}`);
       return undefined;
     });
@@ -87,9 +112,10 @@ const ikamand = (function(){
   }
 
   return {
-    getData: function(timeout){
-      lastData = fetchAndDecodeData(getFullUrl("data"), {}, timeout);
-      return lastData;
+    fetchData: async function(timeout){
+      const result = fetchAndDecodeData(getFullUrl("data"), {}, timeout);
+      result.then(d => setLastData(d));
+      return result;
     },
     stop: function(){
       const payload = new URLSearchParams();
@@ -111,7 +137,7 @@ const ikamand = (function(){
       })
     },
     start: function(targetPitTemperature, targetFoodTemperature){
-      var currentTime = Math.round(new Date().getTime()/1000);
+      const currentTime = Math.round(new Date().getTime()/1000);
 
       const payload = new URLSearchParams();
       payload.set('acs', '1');
@@ -133,11 +159,9 @@ const ikamand = (function(){
         headers: headers,
       });
     },
-    lastData: function(){
-      return lastData;
-    },
+    getLastData,
     isOnline(){
-      return errorCount < 3;
+      return getErrorCount() < 3;
     },
   };
 })();
