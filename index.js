@@ -28,6 +28,7 @@ http.createServer(function (req, res) {
       }
       catch (e) {
         console.error(e);
+        res.end();
       }
     });
   } else {
