@@ -1,5 +1,4 @@
-# Node 15+ not compatible, use 14 instead
-FROM node:14
+FROM node:lts
 # Override during build:
 # docker build --build-arg ip_address=x.x.x.x -t ikamand .
 ARG ip_address=192.168.10.1
