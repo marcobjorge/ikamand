@@ -6,11 +6,11 @@
   "dependencies": {
     "commander": "^10.0.1",
     "finalhandler": "^1.2.0",
-    "http-parser-js": "0.5.8",
     "http-proxy": "1.18.1",
+    "http-string-parser": "^0.0.6",
     "serve-static": "^1.15.0"
   },
   "engines": {
-    "node": ">=13.0.0 <15.0.0"
+    "node": ">=13.0.0"
   }
 }
