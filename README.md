@@ -11,7 +11,7 @@ This project is a web app that exposes the capabilities of iKamand to heat the K
 # Requirements
 
 * A server to run the app (e.g. laptop, RaspberryPi)
-  * [NodeJS](https://nodejs.org/en) installed (version `v14` or `v15`)
+  * [NodeJS](https://nodejs.org/en) installed (tested with Node 20, LTS as of 2024-08-12; should work with Node 14+)
 * An iKamand already connected to your network
 * The IP of the iKamand
 
@@ -43,6 +43,24 @@ pm2 logs ikamand
 * Click the `status` to turn on/off
 * Click the `target pit temp` to adjust it
 * Click the `target food temp` to adjust it
+
+# Docker
+
+The supplied `Dockerfile` will build an image you can use to run the app. You can either specify the default IP address at build time:
+
+```sh
+docker build --build-arg ip_address=x.x.x.x -t ikamand .
+```
+
+Alternatively, you can supply the IP address as an environment variable during runtime:
+
+```sh
+docker run -e IP_ADDRESS=x.x.x.x ikamand
+```
+
+## Docker Compose
+
+If you're using [Docker Compose](https://docs.docker.com/compose/) to run the app, you can use the supplied [docker-compose.yaml](docker-compose.yaml) to build and serve the app.
 
 # Contributing
 
