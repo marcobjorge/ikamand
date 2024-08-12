@@ -1,10 +1,10 @@
-process.binding('http_parser').HTTPParser = require('http-parser-js').HTTPParser;
-
 var http = require('http');
 var httpProxy = require('http-proxy');
 var { program } = require('commander');
 var finalhandler = require('finalhandler');
 var serveStatic = require('serve-static');
+const httpStringParser = require('http-string-parser');
+
 
 program
   .requiredOption('-i, --ikamand <host or ip>', 'The IP or hostname for iKamand')
@@ -16,13 +16,21 @@ console.log(`Starting server on port '${program.opts().port}' and forwarding to 
 var serve = serveStatic("public");
 
 var proxy = httpProxy.createProxyServer({});
-proxy.on('error', function(err){
-  console.error(err);
-});
 
-http.createServer(function(req, res) {
-  if(req.url.startsWith("/cgi-bin")){
-    proxy.web(req, res, { target: `http://${program.opts().ikamand}`});
+http.createServer(function (req, res) {
+  if (req.url.startsWith("/cgi-bin")) {
+    proxy.web(req, res, { target: `http://${program.opts().ikamand}` }, (e) => {
+      try {
+        // The iKamand returns malformed packets; attempt to salvage them manually:
+        const parsedRequest = httpStringParser.parseRequest(e.rawPacket.toString());
+        res.write(parsedRequest.body);
+        res.end();
+      }
+      catch (e) {
+        console.error(e);
+        res.end();
+      }
+    });
   } else {
     var done = finalhandler(req, res);
     serve(req, res, done);

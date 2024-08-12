@@ -1,0 +1,8 @@
+services:
+  ikamand:
+    build:
+      context: .
+    container_name: ikamand
+    environment:
+      - IP_ADDRESS=x.x.x.x
+    restart: unless-stopped
